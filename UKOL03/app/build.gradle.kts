@@ -33,6 +33,11 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+    //modifikace pro princip viewBinding
+    buildFeatures{
+        viewBinding=true
+    }
 }
 
 dependencies {
