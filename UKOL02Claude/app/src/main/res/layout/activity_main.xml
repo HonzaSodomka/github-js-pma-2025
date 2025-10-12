@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/tvNadpis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:text="BMI Kalkulačka"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"/>
+
+    <EditText
+        android:id="@+id/etVaha"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Zadejte váhu v kg"
+        android:inputType="numberDecimal"
+        app:layout_constraintTop_toBottomOf="@+id/tvNadpis"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/etVyska"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"/>
+    <EditText
+        android:id="@+id/etVyska"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Zadejte výšku v cm"
+        android:inputType="numberDecimal"
+        app:layout_constraintTop_toBottomOf="@+id/tvNadpis"
+        app:layout_constraintStart_toEndOf="@+id/etVaha"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"/>
+    <Button
+        android:id="@+id/btnVypocitat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vypočítat"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:backgroundTint="@color/green"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@+id/etVaha"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_marginTop="10dp"/>
+    <TextView
+        android:id="@+id/tvResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pro výpočet BMI zadejte hodnoty a klikněte na tlačítko"
+        app:layout_constraintTop_toBottomOf="@+id/btnVypocitat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"/>
+    <TextView
+        android:id="@+id/tvCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tvResult"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="-----"
+        android:layout_marginTop="10dp"/>
+    <Button
+        android:id="@+id/btnSmazat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tvCategory"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:backgroundTint="@color/red"
+        android:textColor="@color/white"
+        android:text="Smazat"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="30dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
