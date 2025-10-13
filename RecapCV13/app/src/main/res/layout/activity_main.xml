@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/etJmeno"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/etPrijmeni"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint="Jméno"/>
+    <EditText
+        android:id="@+id/etPrijmeni"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/etJmeno"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint="Příjmení"/>
+    <EditText
+        android:id="@+id/etAdresa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/etJmeno"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="20dp"
+        android:hint="Adresa"/>
+    <EditText
+        android:id="@+id/etTelefon"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/etAdresa"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:hint="Telefon"/>
+
+    <RadioGroup
+        android:id="@+id/rgVyber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/etTelefon"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="20dp"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/rbMargherita"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Margherita - 129 Kč"/>
+        <RadioButton
+            android:id="@+id/rbSalami"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Salami - 149 Kč"/>
+        <RadioButton
+            android:id="@+id/rbHawaii"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hawaii - 159 Kč"/>
+        <RadioButton
+            android:id="@+id/rbQuattro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quattro Formaggi - 169 Kč"/>
+    </RadioGroup>
+
+    <CheckBox
+        android:id="@+id/cbSyr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/rgVyber"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/cbSunka"
+        android:text="Extra sýr (+30 Kč)"
+        android:layout_marginStart="20dp"/>
+    <CheckBox
+        android:id="@+id/cbSunka"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/rgVyber"
+        app:layout_constraintStart_toEndOf="@id/cbSyr"
+        android:text="Extra šunka (+40 Kč)"
+        android:layout_marginStart="20dp"/>
+
+    <Button
+        android:id="@+id/btnObjednat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/ivPizza"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="20dp"
+        android:text="Objednat"
+        android:backgroundTint="@color/green"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+
+
+    <TextView
+        android:id="@+id/tvShrnuti"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        app:layout_constraintTop_toBottomOf="@+id/btnObjednat"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/material_dynamic_neutral_variant70"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="20dp"
+        android:text="Zde najdete shrnutí objednávky..."/>
+
+    <ImageView
+        android:id="@+id/ivPizza"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintTop_toBottomOf="@id/cbSunka"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/choose"/>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
