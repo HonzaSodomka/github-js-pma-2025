@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
                 bmi < 18.5 -> "Podváha"
                 bmi < 25 -> "Normální váha"
                 bmi < 30 -> "Nadváha"
-                else -> "Obezita"
+                else -> "Obezita:("
             }
 
             vysledek.text = "Vaše BMI: ${String.format("%.1f", bmi)}"
