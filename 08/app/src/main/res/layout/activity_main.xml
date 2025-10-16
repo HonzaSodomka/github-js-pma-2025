@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/etJmeno"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Jméno"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <EditText
+        android:id="@+id/etPrijmeni"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Příjmení"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/etJmeno"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <CheckBox
+        android:id="@+id/cbPotvrzeni"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Potcrzuji, že jsem 18+"
+        app:layout_constraintTop_toBottomOf="@id/etPrijmeni"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="20dp"/>
+
+    <Button
+        android:id="@+id/btnOdeslat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/cbPotvrzeni"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="Odeslat"
+        android:layout_marginStart="20dp"/>
+
+    <Button
+        android:id="@+id/btnNacist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/cbPotvrzeni"
+        app:layout_constraintStart_toEndOf="@+id/btnOdeslat"
+        android:text="Načíst"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
