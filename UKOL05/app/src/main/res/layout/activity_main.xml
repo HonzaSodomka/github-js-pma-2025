@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/tvNadpis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kalkulačka s Toast a Snackbar"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"/>
+    
+    <EditText
+        android:id="@+id/etCislo1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint="První číslo"
+        app:layout_constraintTop_toBottomOf="@+id/tvNadpis"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"/>
+
+    <EditText
+        android:id="@+id/etCislo2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint="Druhé číslo"
+        app:layout_constraintTop_toBottomOf="@+id/etCislo1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"/>
+
+    <Button
+        android:id="@+id/btnPlus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/etCislo2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnMinus"
+        android:layout_margin="20dp"
+        android:text="+"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:backgroundTint="@color/black"/>
+
+    <Button
+        android:id="@+id/btnMinus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/etCislo2"
+        app:layout_constraintStart_toEndOf="@id/btnPlus"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="20dp"
+        android:text="-"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:backgroundTint="@color/black"/>
+
+    <Button
+        android:id="@+id/btnKrat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/btnPlus"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnDeleno"
+        android:layout_margin="20dp"
+        android:text="x"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:backgroundTint="@color/black"/>
+
+    <Button
+        android:id="@+id/btnDeleno"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/btnMinus"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnKrat"
+        android:text=":"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_margin="20dp"
+        android:backgroundTint="@color/black"/>
+
+    <TextView
+        android:id="@+id/tvVysledek"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btnKrat"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="25dp"
+        android:text="Výsledek:"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/tvCislo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btnDeleno"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvVysledek"
+        android:layout_marginTop="25dp"
+        android:textSize="20sp"
+        android:text="XXX"/>
+
+    <Button
+        android:id="@+id/btnSnack"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tvVysledek"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="20dp"
+        android:backgroundTint="@color/material_dynamic_neutral80"
+        android:text="Vymazat"
+        android:textSize="20dp"
+        android:textColor="@color/black"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
