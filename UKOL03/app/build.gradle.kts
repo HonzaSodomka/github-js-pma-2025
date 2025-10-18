@@ -4,11 +4,15 @@ plugins {
 }
 
 android {
-    namespace = "com.example.myapp003objednavka"
+    buildFeatures{
+        viewBinding = true
+    }
+
+    namespace = "com.example.ukol03_claude"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.myapp003objednavka"
+        applicationId = "com.example.ukol03_claude"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -32,11 +36,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
-    }
-
-    //modifikace pro princip viewBinding
-    buildFeatures{
-        viewBinding=true
     }
 }
 
