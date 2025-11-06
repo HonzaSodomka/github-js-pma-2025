@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tvStatsTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Statistiky"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/tvTotalTasks"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Celkem úkolů: 0"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/tvStatsTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"/>
+
+    <TextView
+        android:id="@+id/tvActiveTasks"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Aktivní: 0"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/tvTotalTasks"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/tvCompletedTasks"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Dokončené: 0"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/tvActiveTasks"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/tvHighPriority"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Vysoká priorita: 0"
+        android:textSize="16sp"
+        android:textColor="#F44336"
+        app:layout_constraintTop_toBottomOf="@id/tvCompletedTasks"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="#E0E0E0"
+        app:layout_constraintTop_toBottomOf="@id/tvHighPriority"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"/>
+
+    <TextView
+        android:id="@+id/tvCategoriesTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Úkoly podle kategorií"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/tvPersonalCount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Osobní: 0"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/tvCategoriesTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/tvWorkCount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Práce: 0"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/tvPersonalCount"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/tvSchoolCount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Škola: 0"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/tvWorkCount"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
