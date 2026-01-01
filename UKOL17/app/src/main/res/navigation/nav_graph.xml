@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/countdownFragment">
+
+    <fragment
+        android:id="@+id/countdownFragment"
+        android:name="com.example.ukol17.CountdownFragment"
+        android:label="Odpočítávadlo" />
+
+    <fragment
+        android:id="@+id/wishlistFragment"
+        android:name="com.example.ukol17.WishlistFragment"
+        android:label="Můj Wishlist" />
+
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="com.example.ukol17.CalendarFragment"
+        android:label="Adventní kalendář" />
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.ukol17.SettingsFragment"
+        android:label="Nastavení" />
+
+
+</navigation>
