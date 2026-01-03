@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootDetail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end">
+
+                <ImageButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@android:drawable/ic_menu_close_clear_cancel"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:tint="#374151"
+                    android:padding="10dp"
+                    android:contentDescription="Zavřít"/>
+            </LinearLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingBottom="48dp">
+
+            <!-- Zmenšeno z 36sp na 28sp -->
+            <TextView
+                android:id="@+id/tvDetailName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trénink"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="#1F2937"
+                android:layout_marginTop="0dp"/>
+
+            <LinearLayout
+                android:id="@+id/metadataContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:id="@+id/tvDetailDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DATUM"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/bg_badge_dark"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="5dp"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvDetailDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ČAS"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:textColor="#4F46E5"
+                    android:background="@drawable/bg_badge_light"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="5dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/detailContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

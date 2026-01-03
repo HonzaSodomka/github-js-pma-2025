@@ -1,59 +1,123 @@
-package com.example.fitnesstracker
+package com.example.fitnesstracker.fragments
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.fitnesstracker.ActiveWorkoutActivity
+import com.example.fitnesstracker.WorkoutDetailActivity // Tuto aktivitu vytvoříme za chvíli
+import com.example.fitnesstracker.R
+import com.example.fitnesstracker.adapters.WorkoutHistoryAdapter
+import com.example.fitnesstracker.models.Workout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [WorkoutsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class WorkoutsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var rvHistory: RecyclerView
+    private lateinit var btnStart: Button
+    private lateinit var db: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_workouts, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment WorkoutsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            WorkoutsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        db = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
+
+        rvHistory = view.findViewById(R.id.rvWorkoutHistory)
+        btnStart = view.findViewById(R.id.btnStartWorkout)
+
+        rvHistory.layoutManager = LinearLayoutManager(context)
+
+        btnStart.setOnClickListener {
+            val intent = Intent(requireContext(), ActiveWorkoutActivity::class.java)
+            startActivity(intent)
+        }
+
+        loadHistory()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadHistory()
+    }
+
+    private fun loadHistory() {
+        val userId = auth.currentUser?.uid ?: return
+
+        db.collection("users").document(userId).collection("workouts")
+            .orderBy("date", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { result ->
+                val workoutList = ArrayList<Workout>()
+
+                for (document in result) {
+                    // DŮLEŽITÉ: Převedeme na objekt a RUČNĚ nastavíme ID dokumentu
+                    val workout = document.toObject(Workout::class.java)
+                    workout.id = document.id // Abychom věděli, co mazat
+                    workoutList.add(workout)
                 }
+
+                // Nastavíme adaptér s funkcemi pro klik a long-click
+                rvHistory.adapter = WorkoutHistoryAdapter(
+                    workoutList,
+                    onItemClick = { workout -> openDetail(workout) },
+                    onItemLongClick = { workout -> showDeleteDialog(workout) }
+                )
+            }
+            .addOnFailureListener {
+                Toast.makeText(context, "Chyba načítání: ${it.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun openDetail(workout: Workout) {
+        val intent = Intent(requireContext(), WorkoutDetailActivity::class.java)
+        intent.putExtra("WORKOUT_DATA", workout) // Posíláme celý objekt (Parcelable)
+        startActivity(intent)
+    }
+
+    private fun showDeleteDialog(workout: Workout) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Smazat trénink?")
+            .setMessage("Opravdu chceš smazat '${workout.name}'? Tato akce je nevratná.")
+            .setPositiveButton("Smazat") { _, _ ->
+                deleteWorkout(workout)
+            }
+            .setNegativeButton("Zrušit", null)
+            .show()
+    }
+
+    private fun deleteWorkout(workout: Workout) {
+        val userId = auth.currentUser?.uid ?: return
+
+        // Pokud ID chybí (stará data), nemůžeme mazat
+        if (workout.id.isEmpty()) return
+
+        db.collection("users").document(userId).collection("workouts")
+            .document(workout.id)
+            .delete()
+            .addOnSuccessListener {
+                Toast.makeText(context, "Smazáno", Toast.LENGTH_SHORT).show()
+                loadHistory() // Obnovit seznam
+            }
+            .addOnFailureListener {
+                Toast.makeText(context, "Chyba při mazání", Toast.LENGTH_SHORT).show()
             }
     }
 }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingVertical="4dp">
+
+    <!-- Číslo série -->
+    <TextView
+        android:id="@+id/tvSetNumber"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:textSize="16sp"
+        android:textColor="#9CA3AF"
+        android:gravity="center"/>
+
+    <!-- Váha Input -->
+    <EditText
+        android:id="@+id/etWeight"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_input_rounded"
+        android:hint="kg"
+        android:inputType="numberDecimal"
+        android:gravity="center"
+        android:layout_marginHorizontal="4dp"
+        android:textSize="16sp"/>
+
+    <!-- Reps Input -->
+    <EditText
+        android:id="@+id/etReps"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_input_rounded"
+        android:hint="reps"
+        android:inputType="number"
+        android:gravity="center"
+        android:layout_marginHorizontal="4dp"
+        android:textSize="16sp"/>
+
+    <!-- Tlačítko smazat sérii (Koš) -->
+    <!-- Používáme ImageButton, aby šlo snadno trefit -->
+    <ImageButton
+        android:id="@+id/btnDeleteSet"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:tint="#EF4444"
+        android:scaleType="centerInside"
+        android:padding="8dp"/>
+
+</LinearLayout>

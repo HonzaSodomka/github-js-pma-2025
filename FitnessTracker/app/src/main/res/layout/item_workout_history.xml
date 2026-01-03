@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Ikona činky (volitelné) -->
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_show_chart"
+                app:tint="#4F46E5"
+                android:layout_marginEnd="12dp"/>
+
+            <TextView
+                android:id="@+id/tvHistoryName"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Chest Day"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="#1F2937"/>
+
+            <!-- Datum badge -->
+            <TextView
+                android:id="@+id/tvHistoryDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12.01."
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#6B7280"
+                android:background="#F3F4F6"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvHistoryStats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4 cviky • 45 min"
+            android:textColor="#9CA3AF"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="36dp"/> <!-- Odsazení, aby lícovalo s textem nahoře -->
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

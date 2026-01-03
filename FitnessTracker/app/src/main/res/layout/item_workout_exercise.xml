@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Hlavička karty -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/tvExerciseName"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Bench Press"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#1F2937"/>
+
+            <ImageButton
+                android:id="@+id/btnExerciseOptions"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@android:drawable/ic_menu_delete"
+                app:tint="#9CA3AF"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+        </LinearLayout>
+
+        <!-- Labely sloupců -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingEnd="40dp"
+            android:layout_marginBottom="8dp">
+
+            <TextView android:layout_width="32dp" android:layout_height="wrap_content" text="#" android:gravity="center" android:textColor="#9CA3AF" android:textSize="12sp" android:textStyle="bold"/>
+            <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" text="VÁHA (KG)" android:gravity="center" android:textColor="#9CA3AF" android:textSize="12sp" android:textStyle="bold"/>
+            <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" text="OPAKOVÁNÍ" android:gravity="center" android:textColor="#9CA3AF" android:textSize="12sp" android:textStyle="bold"/>
+        </LinearLayout>
+
+        <!-- Kontejner pro série -->
+        <LinearLayout
+            android:id="@+id/setsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+
+        <!-- Tlačítko přidat sérii -->
+        <Button
+            android:id="@+id/btnAddSet"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="+ PŘIDAT SÉRII"
+            android:textColor="#4F46E5"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"/>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

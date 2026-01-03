@@ -28,6 +28,11 @@ class WeightFragment : Fragment() {
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
+    // Uložíme si aktuální hodnoty pro výpočty
+    private var currentStartWeight = 0f
+    private var currentTargetWeight = 0f
+    private var currentWeight = 0f
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentWeightBinding.inflate(inflater, container, false)
         return binding.root
@@ -36,46 +41,63 @@ class WeightFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        loadData()
+        startListeningForData() // Změna názvu funkce
 
         binding.fabAddWeight.setOnClickListener {
             showAddWeightDialog()
         }
     }
 
-    private fun loadData() {
+    private fun startListeningForData() {
         val userId = auth.currentUser?.uid ?: return
 
-        db.collection("users").document(userId).get().addOnSuccessListener { doc ->
-            if (_binding == null) return@addOnSuccessListener
+        // 1. Posloucháme změny v PROFILU (Start & Cíl) - ŽIVĚ
+        db.collection("users").document(userId).addSnapshotListener { snapshot, e ->
+            if (_binding == null) return@addSnapshotListener
+            if (e != null || snapshot == null || !snapshot.exists()) return@addSnapshotListener
 
-            val targetWeight = doc.getDouble("targetWeight")?.toFloat() ?: 0f
-            val startWeight = doc.getDouble("startWeight")?.toFloat() ?: 0f
+            // Kdykoliv se změní profil, tohle se spustí
+            currentTargetWeight = snapshot.getDouble("targetWeight")?.toFloat() ?: 0f
+            currentStartWeight = snapshot.getDouble("startWeight")?.toFloat() ?: 0f
 
-            // Listener na změny v kolekci weights
-            db.collection("users").document(userId).collection("weights")
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-                .limit(10)
-                .addSnapshotListener { snapshots, e ->
-                    if (_binding == null) return@addSnapshotListener
-                    if (e != null || snapshots == null) return@addSnapshotListener
-
-                    if (!snapshots.isEmpty) {
-                        val currentWeight = snapshots.documents[0].getDouble("weight")?.toFloat() ?: 0f
-                        binding.tvBigWeight.text = "$currentWeight"
-
-                        updateProgressBar(currentWeight, startWeight, targetWeight)
-                        updateHistoryList(snapshots.documents)
-                    } else {
-                        binding.tvBigWeight.text = "--.-"
-                    }
-                }
+            // Přepočítáme graf s novými limity (pokud už máme aktuální váhu)
+            if (currentWeight > 0) {
+                updateProgressBar(currentWeight, currentStartWeight, currentTargetWeight)
+            }
         }
+
+        // 2. Posloucháme změny ve VÁHÁCH (Historie) - ŽIVĚ
+        db.collection("users").document(userId).collection("weights")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .limit(10)
+            .addSnapshotListener { snapshots, e ->
+                if (_binding == null) return@addSnapshotListener
+                if (e != null || snapshots == null) return@addSnapshotListener
+
+                if (!snapshots.isEmpty) {
+                    currentWeight = snapshots.documents[0].getDouble("weight")?.toFloat() ?: 0f
+                    binding.tvBigWeight.text = "$currentWeight"
+
+                    // Přepočítáme graf s novou váhou
+                    updateProgressBar(currentWeight, currentStartWeight, currentTargetWeight)
+                    updateHistoryList(snapshots.documents)
+                } else {
+                    binding.tvBigWeight.text = "--.-"
+                }
+            }
     }
 
     private fun updateProgressBar(current: Float, start: Float, target: Float) {
         if (_binding == null) return
-        if (start == 0f || target == 0f) return
+
+        // Zobrazíme info o cílech
+        binding.tvStartInfo.text = "Start: $start kg"
+
+        if (start == 0f || target == 0f) {
+            binding.tvTargetInfo.text = "Cíl: $target kg (0 %)"
+            binding.circularProgress.progress = 0
+            return
+        }
 
         val totalDiff = abs(start - target)
         val currentDiff = abs(start - current)
@@ -86,22 +108,23 @@ class WeightFragment : Fragment() {
         if (percentage > 100) percentage = 100
         if (percentage < 0) percentage = 0
 
+        // Logika pro "špatný směr" (přibírám místo hubnutí)
         if (start > target && current > start) percentage = 0
         if (start < target && current < start) percentage = 0
 
         // Pro animaci násobíme 10x (na škálu 0-1000) pro plynulost
         val progressValue = percentage * 10
 
-        // ANIMACE Progress Baru (1.2 sekundy, plynulejší)
-        val animation = ObjectAnimator.ofInt(binding.circularProgress, "progress", 0, progressValue)
-        animation.duration = 1200
+        // ANIMACE Progress Baru
+        val animation = ObjectAnimator.ofInt(binding.circularProgress, "progress", binding.circularProgress.progress, progressValue)
+        animation.duration = 1000
         animation.interpolator = DecelerateInterpolator()
         animation.start()
 
-        // Nastavení textů
-        binding.tvStartInfo.text = "Start: $start kg"
         binding.tvTargetInfo.text = "Cíl: $target kg ($percentage %)"
     }
+
+    // ... (Zbytek funkcí updateHistoryList, showAddWeightDialog zůstává beze změny) ...
 
     private fun updateHistoryList(documents: List<com.google.firebase.firestore.DocumentSnapshot>) {
         if (_binding == null) return

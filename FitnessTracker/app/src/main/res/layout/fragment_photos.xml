@@ -5,40 +5,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background"
-    android:fitsSystemWindows="true"> <!-- TOTO ŘEŠÍ VÝŘEZ/NOTCH -->
+    android:fitsSystemWindows="true">
 
-    <!-- Header Sekce -->
     <LinearLayout
         android:id="@+id/headerContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingHorizontal="24dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="8dp"
+        android:paddingTop="24dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Galerie"
-            android:textAllCaps="true"
+            android:text="PROGRESS"
             android:textColor="#6B7280"
             android:textSize="12sp"
-            android:letterSpacing="0.15"
+            android:letterSpacing="0.1"
             android:textStyle="bold"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tvoje Proměna"
+            android:text="Galerie"
             android:textSize="34sp"
             android:textStyle="bold"
             android:textColor="#1F2937"/>
     </LinearLayout>
 
-    <!-- Mřížka fotek -->
-    <!-- clipToPadding="false" zajistí, že se obsah skroluje i POD paddingy -->
+    <LinearLayout
+        android:id="@+id/llEmptyState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/headerContainer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@android:drawable/ic_menu_camera"
+            app:tint="#D1D5DB"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Žádné fotky"
+            android:textColor="#9CA3AF"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"/>
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvPhotos"
         android:layout_width="match_parent"
@@ -50,56 +72,19 @@
         app:layout_constraintTop_toBottomOf="@id/headerContainer"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <!-- EMPTY STATE (Zobrazí se, když nejsou fotky) -->
-    <LinearLayout
-        android:id="@+id/llEmptyState"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@android:drawable/ic_menu_camera"
-            app:tint="#9CA3AF"
-            android:alpha="0.5"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Zatím žádné fotky"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#4B5563"
-            android:layout_marginTop="16dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Vyfoť se a začni sledovat progres!"
-            android:textSize="14sp"
-            android:textColor="#9CA3AF"
-            android:layout_marginTop="4dp"/>
-    </LinearLayout>
-
-    <!-- Tlačítko přidat -->
+    <!-- ZDE JE ID fabAddPhoto, ABY SEDĚLO S TVÝM PŮVODNÍM KOTLINEM -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabAddPhoto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="24dp"
         android:text="PŘIDAT FOTKU"
-        android:textColor="@color/white"
+        android:textSize="14sp"
         android:textStyle="bold"
+        android:textColor="@color/white"
+        app:backgroundTint="#1F2937"
         app:icon="@android:drawable/ic_menu_camera"
         app:iconTint="@color/white"
-        app:backgroundTint="#4F46E5"
-        android:layout_margin="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

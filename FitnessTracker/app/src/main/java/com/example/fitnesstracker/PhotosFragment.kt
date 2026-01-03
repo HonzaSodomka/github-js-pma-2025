@@ -50,25 +50,24 @@ class PhotosFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Používáme náš nový layout s fitsSystemWindows="true"
         return inflater.inflate(R.layout.fragment_photos, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Inicializace databáze
+        // 1. Inicializace databáze (Room)
         database = AppDatabase.getDatabase(requireContext())
 
-        // Propojení UI prvků
+        // 2. Propojení UI prvků (IDčka musí sedět s XML)
         rvPhotos = view.findViewById(R.id.rvPhotos)
-        fabAdd = view.findViewById(R.id.fabAddPhoto)
+        fabAdd = view.findViewById(R.id.fabAddPhoto)    // V XML je android:id="@+id/fabAddPhoto"
         llEmptyState = view.findViewById(R.id.llEmptyState)
 
-        // Nastavení RecyclerView (mřížka, 2 sloupce vypadají lépe pro velké karty)
-        rvPhotos.layoutManager = GridLayoutManager(context, 2)
+        // 3. Nastavení RecyclerView (Mřížka - 3 sloupce vypadají lépe pro fotky)
+        rvPhotos.layoutManager = GridLayoutManager(context, 3)
 
-        // Inicializace adaptéru s callbackem pro kliknutí
+        // Inicializace adaptéru
         adapter = PhotosAdapter(emptyList()) { photo ->
             // Kliknutí na fotku -> Otevřít detail
             val intent = Intent(requireContext(), PhotoDetailActivity::class.java)
@@ -76,17 +75,16 @@ class PhotosFragment : Fragment() {
             intent.putExtra("PHOTO_ID", photo.id)
             startActivity(intent)
         }
-
         rvPhotos.adapter = adapter
 
-        // Logika tlačítka Přidat
+        // 4. Kliknutí na tlačítko "Přidat fotku"
         fabAdd.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
             pickImageLauncher.launch(intent)
         }
 
-        // Skrývání FABu při scrollování (pro čistší vzhled)
+        // 5. Skrývání tlačítka při scrollování (Hezký efekt)
         rvPhotos.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy > 0) {
@@ -98,22 +96,21 @@ class PhotosFragment : Fragment() {
         })
     }
 
-    // DŮLEŽITÉ: Načítáme data v onResume, aby se seznam aktualizoval,
-    // když se vrátíme z detailu (kde jsme mohli fotku smazat).
     override fun onResume() {
         super.onResume()
+        // Vždy načíst znovu data, když se vrátíme (např. po smazání fotky v detailu)
         loadPhotos()
     }
 
-    // Funkce pro uložení fotky z galerie do aplikace
+    // --- LOGIKA UKLÁDÁNÍ (Zkopíruje soubor k sobě a uloží do DB) ---
     private fun saveImageLocally(sourceUri: Uri) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                // 1. Vytvoříme unikátní název souboru
+                // A. Vytvoříme unikátní název souboru
                 val filename = "progress_${UUID.randomUUID()}.jpg"
                 val file = File(requireContext().filesDir, filename)
 
-                // 2. Zkopírujeme data ze zdroje do našeho souboru
+                // B. Zkopírujeme data ze zdroje do našeho souboru
                 val inputStream = requireContext().contentResolver.openInputStream(sourceUri)
                 val outputStream = FileOutputStream(file)
 
@@ -123,7 +120,7 @@ class PhotosFragment : Fragment() {
                     }
                 }
 
-                // 3. Vytvoříme záznam do databáze
+                // C. Vytvoříme záznam do databáze
                 val photoEntity = PhotoEntity(
                     filePath = file.absolutePath,
                     dateTimestamp = System.currentTimeMillis()
@@ -131,9 +128,9 @@ class PhotosFragment : Fragment() {
 
                 database.photoDao().insertPhoto(photoEntity)
 
-                // 4. Aktualizujeme UI na hlavním vlákně
+                // D. Aktualizujeme UI na hlavním vlákně
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, "Fotka úspěšně uložena!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Fotka uložena!", Toast.LENGTH_SHORT).show()
                     loadPhotos() // Znovu načíst seznam
                 }
 
@@ -145,7 +142,7 @@ class PhotosFragment : Fragment() {
         }
     }
 
-    // Funkce pro načtení fotek z databáze
+    // --- LOGIKA NAČÍTÁNÍ (Z DB do Adapteru) ---
     private fun loadPhotos() {
         lifecycleScope.launch(Dispatchers.IO) {
             // Získáme všechny fotky seřazené od nejnovější
