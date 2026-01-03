@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_workouts"
-        android:icon="@drawable/ic_workouts"
+        android:icon="@drawable/ic_exercises"
         android:title="Tréninky" />
 
     <item
-        android:id="@+id/nav_stats"
-        android:icon="@drawable/ic_stats"
-        android:title="Statistiky" />
+        android:id="@+id/nav_exercises"
+        android:icon="@drawable/ic_workouts"
+        android:title="Cviky" />
 
     <item
         android:id="@+id/nav_weight"

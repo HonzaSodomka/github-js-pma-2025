@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
 
     // 1. Vytvoříme instance fragmentů (držíme je v paměti)
     private val workoutsFragment = WorkoutsFragment()
-    private val statsFragment = StatsFragment()
+    private val exerciseFragment = ExerciseFragment()
     private val weightFragment = WeightFragment()
     private val photosFragment = PhotosFragment()
     private val profileFragment = ProfileFragment()
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                 add(R.id.fragmentContainer, profileFragment, "profile").hide(profileFragment)
                 add(R.id.fragmentContainer, photosFragment, "photos").hide(photosFragment)
                 add(R.id.fragmentContainer, weightFragment, "weight").hide(weightFragment)
-                add(R.id.fragmentContainer, statsFragment, "stats").hide(statsFragment)
+                add(R.id.fragmentContainer, exerciseFragment, "exercises").hide(exerciseFragment)
                 add(R.id.fragmentContainer, workoutsFragment, "workouts") // Tento bude vidět
             }.commit()
         }
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_workouts -> switchFragment(workoutsFragment)
-                R.id.nav_stats -> switchFragment(statsFragment)
+                R.id.nav_exercises -> switchFragment(exerciseFragment)
                 R.id.nav_weight -> switchFragment(weightFragment)
                 R.id.nav_photos -> switchFragment(photosFragment)
                 R.id.nav_profile -> switchFragment(profileFragment)
