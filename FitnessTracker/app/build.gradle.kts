@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -15,6 +16,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 
     buildTypes {
@@ -36,6 +41,12 @@ android {
 }
 
 dependencies {
+    // Firebase BOM - tohle nám hlídá verze, abys nemusel řešit čísla u každé libky
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+
+    // Tyhle 3 potřebujeme pro projekt:
+    implementation("com.google.firebase:firebase-auth-ktx")        // Přihlašování
+    implementation("com.google.firebase:firebase-firestore-ktx")   // Databáze
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

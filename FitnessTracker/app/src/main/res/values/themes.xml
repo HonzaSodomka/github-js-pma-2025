@@ -1,9 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.FitnessTracker" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="Theme.FitnessTracker" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="android:windowBackground">@color/background</item>
+
+        <!-- Status Bar -->
+        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+
+        <!-- Aplikování stylu na BottomNav -->
+        <item name="bottomNavigationStyle">@style/MyBottomNavStyle</item>
     </style>
 
-    <style name="Theme.FitnessTracker" parent="Base.Theme.FitnessTracker" />
+    <!-- Styl pro BottomNav - VYPÍNÁME OVÁL -->
+    <style name="MyBottomNavStyle" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemActiveIndicatorStyle">@style/MyActiveIndicator</item>
+    </style>
+
+    <!-- Styl pro samotný indikátor - PRŮHLEDNÁ BARVA -->
+    <style name="MyActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@android:color/transparent</item>
+    </style>
 </resources>
