@@ -5,12 +5,23 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.fitnesstracker.databinding.ActivityMainBinding
+import com.example.fitnesstracker.fragments.*
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
+
+    // 1. Vytvoříme instance fragmentů (držíme je v paměti)
+    private val workoutsFragment = WorkoutsFragment()
+    private val statsFragment = StatsFragment()
+    private val weightFragment = WeightFragment()
+    private val photosFragment = PhotosFragment()
+    private val profileFragment = ProfileFragment()
+
+    // Sledujeme, který fragment je právě vidět
+    private var activeFragment: Fragment = workoutsFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,26 +36,38 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        // Defaultní fragment
+        // 2. Inicializace fragmentů (všechny přidáme, ale skryjeme ty, co nejsou startovací)
         if (savedInstanceState == null) {
-            replaceFragment(WorkoutsFragment())
+            supportFragmentManager.beginTransaction().apply {
+                add(R.id.fragmentContainer, profileFragment, "profile").hide(profileFragment)
+                add(R.id.fragmentContainer, photosFragment, "photos").hide(photosFragment)
+                add(R.id.fragmentContainer, weightFragment, "weight").hide(weightFragment)
+                add(R.id.fragmentContainer, statsFragment, "stats").hide(statsFragment)
+                add(R.id.fragmentContainer, workoutsFragment, "workouts") // Tento bude vidět
+            }.commit()
         }
 
+        // 3. Přepínání pomocí hide/show
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_workouts -> replaceFragment(WorkoutsFragment())
-                R.id.nav_stats -> replaceFragment(StatsFragment())
-                R.id.nav_weight -> replaceFragment(WeightFragment())
-                R.id.nav_photos -> replaceFragment(PhotosFragment())
-                R.id.nav_profile -> replaceFragment(ProfileFragment())
+                R.id.nav_workouts -> switchFragment(workoutsFragment)
+                R.id.nav_stats -> switchFragment(statsFragment)
+                R.id.nav_weight -> switchFragment(weightFragment)
+                R.id.nav_photos -> switchFragment(photosFragment)
+                R.id.nav_profile -> switchFragment(profileFragment)
             }
             true
         }
     }
 
-    private fun replaceFragment(fragment: Fragment) {
+    private fun switchFragment(targetFragment: Fragment) {
+        if (targetFragment == activeFragment) return
+
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, fragment)
+            .hide(activeFragment)
+            .show(targetFragment)
             .commit()
+
+        activeFragment = targetFragment
     }
 }
