@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Layout pro jeden cvik v detailu tréninku (READ-ONLY)
+    - CardView s názvem cviku
+    - Modré dělítko
+    - Seznam sérií (bez možnosti editace)
+    - Používá RecyclerView místo programmatic UI
+-->
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="24dp"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="32dp">
+
+        <!-- NÁZEV CVIKU -->
+        <TextView
+            android:id="@+id/tvExerciseName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bench Press"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#111827"
+            android:paddingBottom="16dp"/>
+
+        <!-- DĚLÍTKO (modrá čárka pod názvem) -->
+        <View
+            android:id="@+id/divider"
+            android:layout_width="80dp"
+            android:layout_height="6dp"
+            android:background="#4F46E5"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- KONTEJNER PRO SÉRIE (naplňuje se programaticky v adapteru) -->
+        <LinearLayout
+            android:id="@+id/setsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

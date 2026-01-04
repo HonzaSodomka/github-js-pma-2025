@@ -21,8 +21,22 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="end">
+                android:gravity="end"
+                android:orientation="horizontal">
 
+                <!-- SHARE BUTTON - NOVÝ -->
+                <ImageButton
+                    android:id="@+id/btnShare"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@android:drawable/ic_menu_share"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:tint="#374151"
+                    android:padding="10dp"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="Sdílet"/>
+
+                <!-- CLOSE BUTTON (původní) -->
                 <ImageButton
                     android:id="@+id/btnBack"
                     android:layout_width="40dp"
@@ -49,7 +63,7 @@
             android:paddingHorizontal="24dp"
             android:paddingBottom="48dp">
 
-            <!-- Zmenšeno z 36sp na 28sp -->
+            <!-- Název tréninku -->
             <TextView
                 android:id="@+id/tvDetailName"
                 android:layout_width="wrap_content"
@@ -60,6 +74,7 @@
                 android:textColor="#1F2937"
                 android:layout_marginTop="0dp"/>
 
+            <!-- Metadata (datum, čas) -->
             <LinearLayout
                 android:id="@+id/metadataContainer"
                 android:layout_width="match_parent"
@@ -94,11 +109,12 @@
                     android:paddingVertical="5dp"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/detailContainer"
+            <!-- RECYCLERVIEW MÍSTO detailContainer - NOVÝ -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvExercises"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"/>
+                android:nestedScrollingEnabled="false"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

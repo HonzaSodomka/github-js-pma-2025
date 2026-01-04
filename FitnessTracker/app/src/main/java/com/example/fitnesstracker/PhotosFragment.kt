@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -27,22 +28,40 @@ import java.io.File
 import java.io.FileOutputStream
 import java.util.UUID
 
+/**
+ * Fragment pro photo galerii (progress tracking fotky)
+ * - Lokální úložiště pomocí Room databáze
+ * - Mřížka 3 sloupce (GridLayoutManager)
+ * - Loading state při načítání
+ * - Empty state pokud nemá fotky
+ * - Validace a error handling
+ */
 class PhotosFragment : Fragment() {
 
     private lateinit var rvPhotos: RecyclerView
     private lateinit var fabAdd: ExtendedFloatingActionButton
     private lateinit var llEmptyState: LinearLayout
+    private lateinit var progressBar: ProgressBar
 
     private lateinit var adapter: PhotosAdapter
     private lateinit var database: AppDatabase
 
-    // Launcher pro výběr fotky z galerie
+    /**
+     * Launcher pro výběr fotky z galerie
+     * Používá moderní Activity Result API
+     */
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val imageUri = result.data?.data
-            if (imageUri != null) {
-                saveImageLocally(imageUri)
+
+            // === VALIDACE ŽE JE VYBRANÝ OBRÁZEK ===
+            if (imageUri == null) {
+                Toast.makeText(context, "Nebyl vybrán žádný obrázek", Toast.LENGTH_SHORT).show()
+                return@registerForActivityResult
             }
+
+            // Uložení fotky
+            saveImageLocally(imageUri)
         }
     }
 
@@ -56,18 +75,19 @@ class PhotosFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 1. Inicializace databáze (Room)
+        // === INICIALIZACE DATABÁZE (ROOM) ===
         database = AppDatabase.getDatabase(requireContext())
 
-        // 2. Propojení UI prvků (IDčka musí sedět s XML)
+        // === UI KOMPONENTY ===
         rvPhotos = view.findViewById(R.id.rvPhotos)
-        fabAdd = view.findViewById(R.id.fabAddPhoto)    // V XML je android:id="@+id/fabAddPhoto"
+        fabAdd = view.findViewById(R.id.fabAddPhoto)
         llEmptyState = view.findViewById(R.id.llEmptyState)
+        progressBar = view.findViewById(R.id.progressBar)
 
-        // 3. Nastavení RecyclerView (Mřížka - 3 sloupce vypadají lépe pro fotky)
+        // === SETUP RECYCLERVIEW (MŘÍŽKA 3 SLOUPCE) ===
         rvPhotos.layoutManager = GridLayoutManager(context, 3)
 
-        // Inicializace adaptéru
+        // Inicializace adapteru s callback pro kliknutí na fotku
         adapter = PhotosAdapter(emptyList()) { photo ->
             // Kliknutí na fotku -> Otevřít detail
             val intent = Intent(requireContext(), PhotoDetailActivity::class.java)
@@ -77,14 +97,14 @@ class PhotosFragment : Fragment() {
         }
         rvPhotos.adapter = adapter
 
-        // 4. Kliknutí na tlačítko "Přidat fotku"
+        // === FAB PRO PŘIDÁNÍ FOTKY ===
         fabAdd.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
             pickImageLauncher.launch(intent)
         }
 
-        // 5. Skrývání tlačítka při scrollování (Hezký efekt)
+        // === SKRÝVÁNÍ FAB PŘI SCROLLOVÁNÍ (HEZKÝ EFEKT) ===
         rvPhotos.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy > 0) {
@@ -102,25 +122,39 @@ class PhotosFragment : Fragment() {
         loadPhotos()
     }
 
-    // --- LOGIKA UKLÁDÁNÍ (Zkopíruje soubor k sobě a uloží do DB) ---
+    /**
+     * Uloží obrázek lokálně do app storage
+     * - Vytvoří unikátní název souboru (UUID)
+     * - Zkopíruje data do app filesDir
+     * - Uloží cestu do Room databáze
+     */
     private fun saveImageLocally(sourceUri: Uri) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                // A. Vytvoříme unikátní název souboru
+                // === A. VYTVOŘENÍ UNIKÁTNÍHO NÁZVU SOUBORU ===
                 val filename = "progress_${UUID.randomUUID()}.jpg"
                 val file = File(requireContext().filesDir, filename)
 
-                // B. Zkopírujeme data ze zdroje do našeho souboru
+                // === B. ZKOPÍROVÁNÍ DAT ZE ZDROJE DO NAŠEHO SOUBORU ===
                 val inputStream = requireContext().contentResolver.openInputStream(sourceUri)
+
+                // Validace že se soubor otevřel
+                if (inputStream == null) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(context, "Chyba při čtení obrázku", Toast.LENGTH_SHORT).show()
+                    }
+                    return@launch
+                }
+
                 val outputStream = FileOutputStream(file)
 
-                inputStream?.use { input ->
+                inputStream.use { input ->
                     outputStream.use { output ->
                         input.copyTo(output)
                     }
                 }
 
-                // C. Vytvoříme záznam do databáze
+                // === C. VYTVOŘENÍ ZÁZNAMU DO DATABÁZE ===
                 val photoEntity = PhotoEntity(
                     filePath = file.absolutePath,
                     dateTimestamp = System.currentTimeMillis()
@@ -128,38 +162,96 @@ class PhotosFragment : Fragment() {
 
                 database.photoDao().insertPhoto(photoEntity)
 
-                // D. Aktualizujeme UI na hlavním vlákně
+                // === D. AKTUALIZACE UI NA HLAVNÍM VLÁKNĚ ===
                 withContext(Dispatchers.Main) {
                     Toast.makeText(context, "Fotka uložena!", Toast.LENGTH_SHORT).show()
                     loadPhotos() // Znovu načíst seznam
                 }
 
             } catch (e: Exception) {
+                // === ERROR HANDLING PRO UKLÁDÁNÍ ===
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, "Chyba při ukládání: ${e.message}", Toast.LENGTH_SHORT).show()
+                    val errorMessage = when (e) {
+                        is java.io.FileNotFoundException -> "Soubor nebyl nalezen"
+                        is java.io.IOException -> "Chyba při kopírování souboru"
+                        is SecurityException -> "Nemáš oprávnění k souboru"
+                        else -> "Chyba při ukládání: ${e.message}"
+                    }
+                    Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
                 }
             }
         }
     }
 
-    // --- LOGIKA NAČÍTÁNÍ (Z DB do Adapteru) ---
+    /**
+     * Načte fotky z Room databáze
+     * - Zobrazuje loading state
+     * - Error handling
+     * - Empty state pokud nemá fotky
+     */
     private fun loadPhotos() {
+        // === LOADING STATE START ===
+        showLoading()
+
         lifecycleScope.launch(Dispatchers.IO) {
-            // Získáme všechny fotky seřazené od nejnovější
-            val photos = database.photoDao().getAllPhotos()
+            try {
+                // Získáme všechny fotky seřazené od nejnovější
+                val photos = database.photoDao().getAllPhotos()
 
-            withContext(Dispatchers.Main) {
-                adapter.updateData(photos)
+                withContext(Dispatchers.Main) {
+                    adapter.updateData(photos)
 
-                // Přepínání mezi Seznamem a Empty Statem
-                if (photos.isEmpty()) {
-                    llEmptyState.visibility = View.VISIBLE
-                    rvPhotos.visibility = View.GONE
-                } else {
-                    llEmptyState.visibility = View.GONE
-                    rvPhotos.visibility = View.VISIBLE
+                    // === PŘEPÍNÁNÍ MEZI SEZNAMEM A EMPTY STATEM ===
+                    if (photos.isEmpty()) {
+                        showEmptyState()
+                    } else {
+                        showContent()
+                    }
+                }
+
+            } catch (e: Exception) {
+                // === ERROR HANDLING PRO NAČÍTÁNÍ ===
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        context,
+                        "Chyba při načítání fotek: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    // I při chybě zobraz empty state (lepší než bílá obrazovka)
+                    showEmptyState()
                 }
             }
         }
+    }
+
+    /**
+     * Zobrazí loading indicator
+     * Skryje RecyclerView i Empty State
+     */
+    private fun showLoading() {
+        progressBar.visibility = View.VISIBLE
+        rvPhotos.visibility = View.GONE
+        llEmptyState.visibility = View.GONE
+    }
+
+    /**
+     * Zobrazí empty state
+     * Skryje loading i RecyclerView
+     */
+    private fun showEmptyState() {
+        progressBar.visibility = View.GONE
+        rvPhotos.visibility = View.GONE
+        llEmptyState.visibility = View.VISIBLE
+    }
+
+    /**
+     * Zobrazí RecyclerView s fotkami
+     * Skryje loading i Empty State
+     */
+    private fun showContent() {
+        progressBar.visibility = View.GONE
+        rvPhotos.visibility = View.VISIBLE
+        llEmptyState.visibility = View.GONE
     }
 }

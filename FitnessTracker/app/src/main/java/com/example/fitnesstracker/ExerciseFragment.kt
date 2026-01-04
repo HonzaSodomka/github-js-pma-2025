@@ -3,7 +3,6 @@ package com.example.fitnesstracker.fragments
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,11 +15,20 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
+/**
+ * Fragment zobrazující knihovnu cviků
+ * - Expandable list rozdělený do kategorií (Hrudník, Záda, Nohy...)
+ * - Výchozí cviky + vlastní cviky uživatele z Firestore
+ * - Možnost přidání/smazání vlastních cviků
+ * - Moderní design s XML layouty (jako workout history)
+ */
 class ExerciseFragment : Fragment() {
 
     private lateinit var expandableListView: ExpandableListView
     private lateinit var fabAdd: FloatingActionButton
+    private lateinit var progressBar: ProgressBar
     private lateinit var adapter: ExercisesExpandableAdapter
+
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
@@ -38,11 +46,17 @@ class ExerciseFragment : Fragment() {
 
         expandableListView = view.findViewById(R.id.elvExercises)
         fabAdd = view.findViewById(R.id.fabAddExercise)
+        progressBar = view.findViewById(R.id.progressBar)
+
         fabAdd.setOnClickListener { showAddExerciseDialog() }
         loadData()
     }
 
     private fun loadData() {
+        progressBar.visibility = View.VISIBLE
+        expandableListView.visibility = View.GONE
+        fabAdd.isEnabled = false
+
         exercisesMap.clear()
         categoriesList.clear()
 
@@ -55,7 +69,12 @@ class ExerciseFragment : Fragment() {
             exercisesMap[category] = items
         }
 
-        val userId = auth.currentUser?.uid ?: return
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
+            finishLoading()
+            return
+        }
+
         db.collection("users").document(userId).collection("custom_exercises")
             .get()
             .addOnSuccessListener { result ->
@@ -78,7 +97,22 @@ class ExerciseFragment : Fragment() {
                     deleteCustomExercise(item)
                 }
                 expandableListView.setAdapter(adapter)
+                finishLoading()
             }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Chyba načítání: ${e.message}", Toast.LENGTH_LONG).show()
+                adapter = ExercisesExpandableAdapter(requireContext(), categoriesList, exercisesMap) { item ->
+                    deleteCustomExercise(item)
+                }
+                expandableListView.setAdapter(adapter)
+                finishLoading()
+            }
+    }
+
+    private fun finishLoading() {
+        progressBar.visibility = View.GONE
+        expandableListView.visibility = View.VISIBLE
+        fabAdd.isEnabled = true
     }
 
     private fun showAddExerciseDialog() {
@@ -137,6 +171,9 @@ class ExerciseFragment : Fragment() {
                 Toast.makeText(context, "Cvik přidán", Toast.LENGTH_SHORT).show()
                 loadData()
             }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Chyba: ${e.message}", Toast.LENGTH_LONG).show()
+            }
     }
 
     private fun deleteCustomExercise(item: ExerciseItem) {
@@ -154,11 +191,17 @@ class ExerciseFragment : Fragment() {
                         Toast.makeText(context, "Smazáno", Toast.LENGTH_SHORT).show()
                         loadData()
                     }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(context, "Chyba: ${e.message}", Toast.LENGTH_LONG).show()
+                    }
             }
             .setNegativeButton("Zrušit", null)
             .show()
     }
 
+    /**
+     * Adapter používající XML layouty (jako WorkoutHistoryAdapter)
+     */
     inner class ExercisesExpandableAdapter(
         private val context: Context,
         private val headers: List<String>,
@@ -176,47 +219,54 @@ class ExerciseFragment : Fragment() {
         override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean = true
 
         override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup?): View {
-            val textView = (convertView as? TextView) ?: TextView(context)
-            textView.apply {
-                text = headers[groupPosition]
-                textSize = 18f
-                setTypeface(null, Typeface.BOLD)
-                setTextColor(Color.parseColor("#1F2937"))
-                setPadding(50, 30, 30, 30)
-            }
-            return textView
+            val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_exercise_category, parent, false)
+
+            val category = headers[groupPosition]
+            val itemCount = getChildrenCount(groupPosition)
+
+            val tvName = view.findViewById<TextView>(R.id.tvCategoryName)
+            val tvCount = view.findViewById<TextView>(R.id.tvCategoryCount)
+            val ivArrow = view.findViewById<ImageView>(R.id.ivArrow)
+
+            tvName.text = category
+            tvCount.text = itemCount.toString()
+
+            // Otočení šipky podle stavu
+            ivArrow.setImageResource(
+                if (isExpanded) android.R.drawable.arrow_up_float
+                else android.R.drawable.arrow_down_float
+            )
+
+            return view
         }
 
         override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?): View {
+            val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_exercise_child, parent, false)
+
             val item = getChild(groupPosition, childPosition) as ExerciseItem
 
-            val layout = (convertView as? LinearLayout) ?: LinearLayout(context).apply {
-                orientation = LinearLayout.HORIZONTAL
-                gravity = android.view.Gravity.CENTER_VERTICAL
-            }
+            val tvName = view.findViewById<TextView>(R.id.tvExerciseName)
+            val bulletPoint = view.findViewById<View>(R.id.bulletPoint)
+            val tvCustomBadge = view.findViewById<TextView>(R.id.tvCustomBadge)
+            val btnDelete = view.findViewById<ImageView>(R.id.btnDelete)
 
-            layout.removeAllViews()
-            layout.setPadding(60, 20, 30, 20)
+            tvName.text = item.name
 
-            val tvName = TextView(context).apply {
-                text = item.name
-                textSize = 16f
-                setTextColor(if (item.isCustom) Color.parseColor("#4F46E5") else Color.parseColor("#374151"))
-                layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
-            }
-            layout.addView(tvName)
-
+            // Bullet point barva
             if (item.isCustom) {
-                val btnDelete = ImageView(context).apply {
-                    setImageResource(android.R.drawable.ic_menu_delete)
-                    setColorFilter(Color.parseColor("#EF4444"))
-                    setPadding(20, 20, 20, 20)
-                    setOnClickListener { onDeleteClick(item) }
-                }
-                layout.addView(btnDelete)
+                bulletPoint.setBackgroundColor(Color.parseColor("#4F46E5")) // Modrá
+                tvName.setTextColor(Color.parseColor("#4F46E5"))
+                tvCustomBadge.visibility = View.VISIBLE
+                btnDelete.visibility = View.VISIBLE
+                btnDelete.setOnClickListener { onDeleteClick(item) }
+            } else {
+                bulletPoint.setBackgroundColor(Color.parseColor("#D1D5DB")) // Šedá
+                tvName.setTextColor(Color.parseColor("#374151"))
+                tvCustomBadge.visibility = View.GONE
+                btnDelete.visibility = View.GONE
             }
 
-            return layout
+            return view
         }
     }
 }

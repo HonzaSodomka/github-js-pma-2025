@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Custom kruhový progress bar s gradientem
+    - Šedý background ring
+    - Modrý gradient pro progress (sweep gradient)
+    - Začíná nahoře díky rotate 270°
+-->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Pozadí (šedý kruh) -->
@@ -10,7 +16,7 @@
         </shape>
     </item>
 
-    <!-- Popředí (Modrý kruh - progress) -->
+    <!-- Popředí (Gradient progress) -->
     <item>
         <rotate
             android:fromDegrees="270"

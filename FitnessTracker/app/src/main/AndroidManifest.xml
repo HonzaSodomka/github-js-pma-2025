@@ -13,30 +13,41 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FitnessTracker">
+
         <activity
             android:name=".WorkoutDetailActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".ActiveWorkoutActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".PhotoDetailActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".RegisterActivity"
-            android:exported="false" /> <!-- TOTO JE TEĎ STARTOVACÍ AKTIVITA -->
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".LoginActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- TOTO JE HLAVNÍ, ALE NE STARTOVACÍ -->
+        </activity>
+
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

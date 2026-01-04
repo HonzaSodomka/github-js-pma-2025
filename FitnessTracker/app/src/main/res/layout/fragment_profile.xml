@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Fragment profilu uživatele
+    - Avatar kruh s iniciály (gradient background)
+    - Editovatelné pole jméno (EditText jako zobrazení)
+    - Stats karta (věk, start váha, cíl váha)
+    - Tlačítko Uložit změny
+    - Tlačítko Odhlásit se
+    ZMĚNA: Sjednocený header se zbytkem aplikace
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,21 +16,35 @@
     android:background="@drawable/gradient_background"
     android:fitsSystemWindows="true">
 
-    <!-- Nadpis -->
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
+    <!-- Header sekce (SJEDNOCENÝ STYL) -->
+    <LinearLayout
+        android:id="@+id/headerContainer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Můj Profil"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:textColor="#1F2937"
-        android:layout_marginTop="32dp"
-        android:layout_marginStart="24dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="24dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <!-- Avatar -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ÚČET"
+            android:textColor="#6B7280"
+            android:textSize="12sp"
+            android:letterSpacing="0.1"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Můj profil"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            android:textColor="#1F2937"/>
+    </LinearLayout>
+
+    <!-- Avatar kruh s iniciály -->
     <androidx.cardview.widget.CardView
         android:id="@+id/avatarCard"
         android:layout_width="120dp"
@@ -30,15 +53,17 @@
         app:cardCornerRadius="60dp"
         app:cardElevation="12dp"
         app:cardBackgroundColor="@android:color/transparent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintTop_toBottomOf="@id/headerContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Gradient kruh (bg_avatar_circle.xml) -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/bg_avatar_circle">
 
+            <!-- Iniciály (např. "JN" pro Jan Novák) -->
             <TextView
                 android:id="@+id/tvInitials"
                 android:layout_width="wrap_content"
@@ -50,7 +75,7 @@
         </FrameLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Jméno (Input) -->
+    <!-- Jméno (EditText jako zobrazení - chytrý trik!) -->
     <EditText
         android:id="@+id/etName"
         android:layout_width="wrap_content"
@@ -69,7 +94,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Email (Zobrazení) -->
+    <!-- Email (read-only zobrazení) -->
     <TextView
         android:id="@+id/tvEmailDisplay"
         android:layout_width="wrap_content"
@@ -84,7 +109,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="4dp"/>
 
-    <!-- Kartička se statistikami -->
+    <!-- Stats karta (věk, start, cíl) -->
     <androidx.cardview.widget.CardView
         android:id="@+id/statsCard"
         android:layout_width="match_parent"
@@ -96,6 +121,7 @@
         app:cardBackgroundColor="@color/white"
         app:layout_constraintTop_toBottomOf="@id/tvEmailDisplay">
 
+        <!-- Horizontální layout se 3 sloupci -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -103,13 +129,14 @@
             android:paddingVertical="24dp"
             android:baselineAligned="false">
 
-            <!-- Věk -->
+            <!-- VĚKOVÝ SLOUPEC -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -118,6 +145,8 @@
                     android:textSize="12sp"
                     android:textAllCaps="true"
                     android:letterSpacing="0.1"/>
+
+                <!-- EditText pro věk -->
                 <EditText
                     android:id="@+id/etAge"
                     android:layout_width="wrap_content"
@@ -132,19 +161,21 @@
                     android:minWidth="40dp"/>
             </LinearLayout>
 
+            <!-- Vertikální dělítko -->
             <View
                 android:layout_width="1dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
                 android:background="#E5E7EB"/>
 
-            <!-- Start -->
+            <!-- START VÁHA SLOUPEC -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -153,6 +184,7 @@
                     android:textSize="12sp"
                     android:textAllCaps="true"
                     android:letterSpacing="0.1"/>
+
                 <EditText
                     android:id="@+id/etStartWeight"
                     android:layout_width="wrap_content"
@@ -166,19 +198,21 @@
                     android:minWidth="30dp"/>
             </LinearLayout>
 
+            <!-- Vertikální dělítko -->
             <View
                 android:layout_width="1dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
                 android:background="#E5E7EB"/>
 
-            <!-- Cíl -->
+            <!-- CÍL VÁHA SLOUPEC -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -188,6 +222,7 @@
                     android:textSize="12sp"
                     android:textAllCaps="true"
                     android:letterSpacing="0.1"/>
+
                 <EditText
                     android:id="@+id/etTargetWeight"
                     android:layout_width="wrap_content"
@@ -203,7 +238,7 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Tlačítko Uložit -->
+    <!-- Tlačítko Uložit změny -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSave"
         android:layout_width="match_parent"
@@ -218,7 +253,7 @@
         app:backgroundTint="#4F46E5"
         app:layout_constraintTop_toBottomOf="@id/statsCard"/>
 
-    <!-- Logout -->
+    <!-- Odhlásit se (červený text dole) -->
     <TextView
         android:id="@+id/btnLogout"
         android:layout_width="wrap_content"

@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Hlavní aktivita s Bottom Navigation
+    - FrameLayout pro fragmenty
+    - Subtilní divider
+    - BottomNavigationView s custom stylem
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -6,7 +12,7 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <!-- Kontejner pro fragmenty -->
+    <!-- Kontejner pro fragmenty (hide/show pattern) -->
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
@@ -14,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/divider"/>
 
-    <!-- Linka -->
+    <!-- Jemná linka nad navigation barem -->
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
@@ -22,23 +28,18 @@
         android:background="#EEEEEE"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation"/>
 
-    <!-- Menu -->
+    <!-- Bottom Navigation Menu -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-
         app:menu="@menu/bottom_nav_menu"
-
         app:itemIconTint="@color/selector_nav_item"
         app:itemTextColor="@color/selector_nav_item"
-
         app:labelVisibilityMode="labeled"
         app:elevation="0dp"
-
         app:itemRippleColor="@android:color/transparent"
-
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -34,6 +34,55 @@
             android:textColor="#1F2937"/>
     </LinearLayout>
 
+    <!-- LOADING INDICATOR - NOVÝ -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/headerContainer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- EMPTY STATE - NOVÝ -->
+    <LinearLayout
+        android:id="@+id/llEmptyState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/headerContainer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_workouts"
+            app:tint="#D1D5DB"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Žádné tréninky"
+            android:textColor="#9CA3AF"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Začni svůj první trénink!"
+            android:textColor="#9CA3AF"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"/>
+    </LinearLayout>
+
+    <!-- RECYCLERVIEW (původní) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvWorkoutHistory"
         android:layout_width="match_parent"
@@ -45,6 +94,7 @@
         app:layout_constraintTop_toBottomOf="@id/headerContainer"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
+    <!-- FAB (původní) -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btnStartWorkout"
         android:layout_width="wrap_content"

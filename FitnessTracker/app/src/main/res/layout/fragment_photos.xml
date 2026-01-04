@@ -34,6 +34,18 @@
             android:textColor="#1F2937"/>
     </LinearLayout>
 
+    <!-- LOADING INDICATOR - NOVÝ -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/headerContainer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- EMPTY STATE (původní) -->
     <LinearLayout
         android:id="@+id/llEmptyState"
         android:layout_width="wrap_content"
@@ -61,6 +73,7 @@
             android:layout_marginTop="8dp"/>
     </LinearLayout>
 
+    <!-- RECYCLERVIEW (původní) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvPhotos"
         android:layout_width="match_parent"
@@ -72,7 +85,7 @@
         app:layout_constraintTop_toBottomOf="@id/headerContainer"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <!-- ZDE JE ID fabAddPhoto, ABY SEDĚLO S TVÝM PŮVODNÍM KOTLINEM -->
+    <!-- FAB (původní) -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabAddPhoto"
         android:layout_width="wrap_content"

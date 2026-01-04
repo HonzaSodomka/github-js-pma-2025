@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Layout pro jednu kartu v historii tréninků
-    - Ikona činky (progress chart)
-    - Název tréninku (vlevo)
-    - Datum badge (vpravo)
-    - Stats (počet cviků + čas) pod názvem
-    - Kliknutí = detail, Long-press = smazat
+    Layout pro kategorii cviků (group item)
+    Podobný styl jako item_workout_history.xml
 -->
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -23,57 +19,53 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- HLAVIČKA (ikona + název + datum) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <!-- Ikona činky (volitelné, můžeš odstranit) -->
+            <!-- Ikona činky (stejná jako workout history) -->
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_show_chart"
+                android:src="@drawable/ic_workouts"
                 app:tint="#4F46E5"
                 android:layout_marginEnd="12dp"/>
 
-            <!-- Název tréninku (např. "Hrudník & Triceps") -->
+            <!-- Název kategorie -->
             <TextView
-                android:id="@+id/tvHistoryName"
+                android:id="@+id/tvCategoryName"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Chest Day"
+                android:text="Hrudník"
                 android:textStyle="bold"
                 android:textSize="18sp"
                 android:textColor="#1F2937"/>
 
-            <!-- Datum badge (12.01.) -->
+            <!-- Badge s počtem cviků -->
             <TextView
-                android:id="@+id/tvHistoryDate"
+                android:id="@+id/tvCategoryCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="12.01."
+                android:text="8"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="#6B7280"
                 android:background="#F3F4F6"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="4dp"/>
-        </LinearLayout>
 
-        <!-- STATS (4 cviky • 45 min) -->
-        <!-- Odsazení zleva aby lícovalo s textem nahoře -->
-        <TextView
-            android:id="@+id/tvHistoryStats"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="4 cviky • 45 min"
-            android:textColor="#9CA3AF"
-            android:textSize="14sp"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="36dp"/>
+            <!-- Šipka expand/collapse -->
+            <ImageView
+                android:id="@+id/ivArrow"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/arrow_down_float"
+                app:tint="#4F46E5"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

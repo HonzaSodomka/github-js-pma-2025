@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Layout pro jeden řádek série v cviku
-    - Číslo série (1, 2, 3...)
-    - Input pro váhu (kg)
-    - Input pro opakování (reps)
-    - Tlačítko smazat sérii (X)
-    - TextWatcher v adapteru ukládá data průběžně
-
-    OPRAVA: Odstraněn android:hintTextColor (způsoboval linking error)
+    Layout pro jednu sérii KARDIO cviku
+    - Místo váhy a opakování jen čas v minutách
+    - Např. "1. série - 15 min"
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -27,14 +22,14 @@
         android:textColor="#9CA3AF"
         android:gravity="center"/>
 
-    <!-- INPUT PRO VÁHU (kg) -->
+    <!-- INPUT PRO ČAS (minuty) -->
     <EditText
-        android:id="@+id/etWeight"
+        android:id="@+id/etTime"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="40dp"
         android:background="@drawable/bg_input_rounded"
-        android:hint="kg"
+        android:hint="minuty"
         android:inputType="numberDecimal"
         android:gravity="center"
         android:layout_marginHorizontal="4dp"
@@ -43,21 +38,14 @@
         android:textColorHint="#9CA3AF"
         android:textStyle="bold"/>
 
-    <!-- INPUT PRO OPAKOVÁNÍ (reps) -->
-    <EditText
-        android:id="@+id/etReps"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="40dp"
-        android:background="@drawable/bg_input_rounded"
-        android:hint="reps"
-        android:inputType="number"
-        android:gravity="center"
-        android:layout_marginHorizontal="4dp"
-        android:textSize="16sp"
-        android:textColor="#1F2937"
-        android:textColorHint="#9CA3AF"
-        android:textStyle="bold"/>
+    <!-- Label "min" -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="min"
+        android:textSize="14sp"
+        android:textColor="#6B7280"
+        android:layout_marginEnd="8dp"/>
 
     <!-- TLAČÍTKO SMAZAT SÉRII (X ikona) -->
     <ImageButton

@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Aktivita pro záznam probíhajícího tréninku
+    - CoordinatorLayout + AppBar pro správné scrollování
+    - Timer nahoře (počítá čas tréninku)
+    - EditText pro název tréninku (auto-naming)
+    - RecyclerView s cviky (každý cvik má své série)
+    - Tlačítko "Přidat cvik"
+    - Tlačítka "Zrušit" a "Dokončit" v toolbaru
+-->
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,6 +16,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background">
 
+    <!-- AppBar (průhledný, bez elevation) -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
@@ -24,6 +34,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
 
+                <!-- TLAČÍTKO ZRUŠIT (TextView, ne ImageButton) -->
                 <TextView
                     android:id="@+id/btnClose"
                     android:layout_width="wrap_content"
@@ -37,8 +48,13 @@
                     android:clickable="true"
                     android:focusable="true"/>
 
-                <View android:layout_width="0dp" android:layout_weight="1" android:layout_height="0dp"/>
+                <!-- Spacer (vyplní prostor mezi tlačítky) -->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="0dp"/>
 
+                <!-- TLAČÍTKO DOKONČIT -->
                 <Button
                     android:id="@+id/btnFinish"
                     android:layout_width="wrap_content"
@@ -54,6 +70,7 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <!-- Scrollovatelný obsah -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -66,6 +83,8 @@
             android:paddingHorizontal="16dp"
             android:paddingBottom="48dp">
 
+            <!-- NÁZEV TRÉNINKU (editovatelný) -->
+            <!-- Placeholder "Dnešní trénink" se auto-nahradí podle cviků -->
             <EditText
                 android:id="@+id/etWorkoutName"
                 android:layout_width="match_parent"
@@ -78,6 +97,7 @@
                 android:inputType="textCapWords"
                 android:layout_marginTop="4dp"/>
 
+            <!-- TIMER (00:00 formát, live counting) -->
             <TextView
                 android:id="@+id/tvTimer"
                 android:layout_width="wrap_content"
@@ -92,12 +112,15 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="20dp"/>
 
+            <!-- RECYCLERVIEW S CVIKY -->
+            <!-- Každá položka = 1 cvik s jeho sériemi -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvExercises"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"/>
 
+            <!-- TLAČÍTKO PŘIDAT CVIK -->
             <Button
                 android:id="@+id/btnAddExercise"
                 android:layout_width="match_parent"

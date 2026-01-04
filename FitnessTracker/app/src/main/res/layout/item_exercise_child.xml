@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Layout pro jednotlivý cvik (child item)
+    Odsazený pod kategorií, jednodušší design
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingVertical="12dp"
+    android:paddingHorizontal="20dp"
+    android:paddingStart="56dp"
+    android:background="@color/white">
+
+    <!-- Bullet point (tečka) -->
+    <View
+        android:id="@+id/bulletPoint"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/ic_bullet_circle"/>
+
+    <!-- Název cviku -->
+    <TextView
+        android:id="@+id/tvExerciseName"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="Bench Press"
+        android:textSize="16sp"
+        android:textColor="#374151"/>
+
+    <!-- Badge "VLASTNÍ" (jen pro custom cviky) -->
+    <TextView
+        android:id="@+id/tvCustomBadge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="VLASTNÍ"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:textColor="#4F46E5"
+        android:background="#EEF2FF"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone"/>
+
+    <!-- Tlačítko smazat (jen pro custom cviky) -->
+    <ImageView
+        android:id="@+id/btnDelete"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@android:drawable/ic_menu_delete"
+        app:tint="#EF4444"
+        android:padding="6dp"
+        android:visibility="gone"/>
+
+</LinearLayout>

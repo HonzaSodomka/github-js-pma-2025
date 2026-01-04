@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Dialog pro přidání nové váhy
+    - TextInputLayout s decimal inputem
+    - Tlačítko Uložit
+    - Validace v kódu (0-500 kg, max 1x denně)
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -21,14 +27,13 @@
         android:layout_height="wrap_content"
         android:hint="Váha (kg)"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etWeightInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"/>
     </com.google.android.material.textfield.TextInputLayout>
-
-    <!-- Datum vyřešíme aktuálním dnem automaticky, ať je to jednodušší -->
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSaveWeight"
@@ -37,4 +42,5 @@
         android:text="ULOŽIT"
         android:layout_marginTop="24dp"
         app:cornerRadius="8dp"/>
+
 </LinearLayout>

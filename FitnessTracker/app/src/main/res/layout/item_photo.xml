@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Layout pro jednu fotku v galerii (grid 3 sloupce)
+    - CardView s fotkou (centerCrop pro správné zobrazení)
+    - Datum badge v rohu (glassmorphism styl)
+    - Kliknutí = full-screen detail
+-->
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -13,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Fotka -->
+        <!-- FOTKA (centerCrop = vyplní celou plochu, ořízne přebytky) -->
         <ImageView
             android:id="@+id/ivPhoto"
             android:layout_width="match_parent"
@@ -21,7 +27,7 @@
             android:scaleType="centerCrop"
             android:src="#E5E7EB"/>
 
-        <!-- Datum Badge (Glassmorphism style) -->
+        <!-- DATUM BADGE (glassmorphism - průhledný černý background) -->
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,6 +38,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
+            <!-- Datum text (bílý text, velká písmena) -->
             <TextView
                 android:id="@+id/tvDate"
                 android:layout_width="wrap_content"

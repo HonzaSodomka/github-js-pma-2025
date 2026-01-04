@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Fragment se seznamem cviků
+    NOVÝ DESIGN:
+    - CardView pro každou kategorii (místo plain textu)
+    - Ikony kategorií
+    - Badge s počtem cviků
+    - Barevné zvýraznění vlastních cviků
+    - Smooth expand/collapse animace
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,6 +16,7 @@
     android:background="@drawable/gradient_background"
     android:fitsSystemWindows="true">
 
+    <!-- Header sekce -->
     <LinearLayout
         android:id="@+id/headerContainer"
         android:layout_width="match_parent"
@@ -34,6 +44,18 @@
             android:textColor="#1F2937"/>
     </LinearLayout>
 
+    <!-- ProgressBar (loading state) -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- ExpandableListView -->
     <ExpandableListView
         android:id="@+id/elvExercises"
         android:layout_width="match_parent"
@@ -43,11 +65,13 @@
         android:paddingBottom="100dp"
         android:clipToPadding="false"
         android:divider="@android:color/transparent"
-        android:dividerHeight="8dp"
+        android:dividerHeight="12dp"
         android:groupIndicator="@null"
+        android:childDivider="@android:color/transparent"
         app:layout_constraintTop_toBottomOf="@id/headerContainer"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
+    <!-- FAB pro přidání cviku -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddExercise"
         android:layout_width="wrap_content"

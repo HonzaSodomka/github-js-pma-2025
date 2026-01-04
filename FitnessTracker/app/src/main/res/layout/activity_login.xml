@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Přihlašovací obrazovka
+    - Velký nadpis "Vítej zpět."
+    - Material TextInputLayout (email + heslo)
+    - Password toggle (ikona oka)
+    - Link na zapomenuté heslo
+    - Link na registraci dole
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,6 +16,7 @@
     android:padding="24dp">
 
     <!-- HEADER SEKCE -->
+    <!-- Velký nadpis s line break -->
     <TextView
         android:id="@+id/tvWelcome"
         android:layout_width="wrap_content"
@@ -21,6 +30,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
+    <!-- Podnadpis -->
     <TextView
         android:id="@+id/tvSubtitle"
         android:layout_width="wrap_content"
@@ -41,7 +51,7 @@
         android:layout_marginTop="48dp"
         app:layout_constraintTop_toBottomOf="@id/tvSubtitle">
 
-        <!-- EMAIL -->
+        <!-- EMAIL INPUT -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,7 +74,7 @@
                 android:paddingVertical="16dp"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- HESLO -->
+        <!-- HESLO INPUT (s ikonou oka pro zobrazení/skrytí) -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -89,7 +99,7 @@
                 android:paddingVertical="16dp"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- ZAPOMENUTÉ HESLO -->
+        <!-- ZAPOMENUTÉ HESLO (placeholder, nefunkční) -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -101,7 +111,7 @@
 
     </LinearLayout>
 
-    <!-- AKCE -->
+    <!-- AKČNÍ TLAČÍTKO -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLogin"
         android:layout_width="match_parent"
@@ -118,7 +128,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- FOOTER LINK -->
+    <!-- FOOTER LINK (přechod na registraci) -->
     <LinearLayout
         android:id="@+id/layoutRegisterLink"
         android:layout_width="wrap_content"
@@ -136,6 +146,7 @@
             android:textColor="#6B7280"
             android:textSize="15sp"/>
 
+        <!-- Klikatelný link -->
         <TextView
             android:id="@+id/tvGoToRegister"
             android:layout_width="wrap_content"
