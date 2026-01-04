@@ -1,8 +1,12 @@
-package com.example.fitnesstracker
+package com.example.fitnesstracker.activities
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -12,6 +16,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.fitnesstracker.R
 import com.example.fitnesstracker.adapters.ActiveWorkoutAdapter
 import com.example.fitnesstracker.models.Workout
 import com.example.fitnesstracker.models.WorkoutExercise
@@ -214,10 +219,10 @@ class ActiveWorkoutActivity : AppCompatActivity() {
     private fun showCreateCustomExerciseDialog(category: String) {
         val input = EditText(this)
         input.hint = "Název cviku"
-        val container = android.widget.FrameLayout(this)
-        val params = android.widget.FrameLayout.LayoutParams(
-            android.view.ViewGroup.LayoutParams.MATCH_PARENT,
-            android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+        val container = FrameLayout(this)
+        val params = FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
         )
         params.leftMargin = 50
         params.rightMargin = 50
@@ -377,7 +382,7 @@ class ActiveWorkoutActivity : AppCompatActivity() {
      * Běží každou sekundu v main thread pomocí Handler
      */
     private fun startTimerDisplay() {
-        val handler = android.os.Handler(android.os.Looper.getMainLooper())
+        val handler = Handler(Looper.getMainLooper())
         handler.post(object : Runnable {
             override fun run() {
                 val millis = System.currentTimeMillis() - startTime

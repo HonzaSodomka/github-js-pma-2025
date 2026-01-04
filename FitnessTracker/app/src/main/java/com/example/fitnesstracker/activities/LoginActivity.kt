@@ -1,4 +1,4 @@
-package com.example.fitnesstracker
+package com.example.fitnesstracker.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,8 +6,10 @@ import android.util.Patterns
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.fitnesstracker.R
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
@@ -86,7 +88,7 @@ class LoginActivity : AppCompatActivity() {
                                 "Nesprávné heslo. Zkus to znovu."
                             }
                             // Síťová chyba
-                            is com.google.firebase.FirebaseNetworkException -> {
+                            is FirebaseNetworkException -> {
                                 "Problém s připojením k internetu"
                             }
                             // Jiná chyba - zobraz obecnou zprávu

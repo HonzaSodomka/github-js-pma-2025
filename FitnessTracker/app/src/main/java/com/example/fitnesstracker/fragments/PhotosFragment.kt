@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.fitnesstracker.PhotoDetailActivity
+import com.example.fitnesstracker.activities.PhotoDetailActivity
 import com.example.fitnesstracker.R
 import com.example.fitnesstracker.adapters.PhotosAdapter
 import com.example.fitnesstracker.database.AppDatabase

@@ -1,4 +1,4 @@
-package com.example.fitnesstracker
+package com.example.fitnesstracker.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,7 +10,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.fitnesstracker.adapters.WorkoutDetailAdapter
+import com.example.fitnesstracker.R
+import com.example.fitnesstracker.adapters.*
 import com.example.fitnesstracker.models.Workout
 import com.google.android.material.appbar.AppBarLayout
 import java.text.SimpleDateFormat

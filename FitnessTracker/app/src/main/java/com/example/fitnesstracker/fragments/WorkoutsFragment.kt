@@ -13,9 +13,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.fitnesstracker.ActiveWorkoutActivity
+import com.example.fitnesstracker.activities.ActiveWorkoutActivity
 import com.example.fitnesstracker.R
-import com.example.fitnesstracker.WorkoutDetailActivity
+import com.example.fitnesstracker.activities.WorkoutDetailActivity
 import com.example.fitnesstracker.adapters.WorkoutHistoryAdapter
 import com.example.fitnesstracker.models.Workout
 import com.google.firebase.auth.FirebaseAuth

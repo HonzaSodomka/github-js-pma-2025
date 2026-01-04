@@ -15,27 +15,27 @@
         android:theme="@style/Theme.FitnessTracker">
 
         <activity
-            android:name=".WorkoutDetailActivity"
+            android:name=".activities.WorkoutDetailActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".ActiveWorkoutActivity"
+            android:name=".activities.ActiveWorkoutActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".PhotoDetailActivity"
+            android:name=".activities.PhotoDetailActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".RegisterActivity"
+            android:name=".activities.RegisterActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -45,7 +45,7 @@
         </activity>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
     </application>

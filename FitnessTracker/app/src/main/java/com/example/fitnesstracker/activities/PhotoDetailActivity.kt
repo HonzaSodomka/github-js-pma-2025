@@ -1,4 +1,4 @@
-package com.example.fitnesstracker
+package com.example.fitnesstracker.activities
 
 import android.os.Bundle
 import android.widget.ImageButton
@@ -13,11 +13,13 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.fitnesstracker.R
 import com.example.fitnesstracker.database.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.IOException
 
 /**
  * Aktivita pro zobrazení fotky na celou obrazovku
@@ -154,7 +156,7 @@ class PhotoDetailActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     val errorMessage = when (e) {
                         is SecurityException -> "Nemáš oprávnění k smazání souboru"
-                        is java.io.IOException -> "Chyba při mazání souboru"
+                        is IOException -> "Chyba při mazání souboru"
                         else -> "Chyba při mazání: ${e.message}"
                     }
                     Toast.makeText(this@PhotoDetailActivity, errorMessage, Toast.LENGTH_LONG).show()

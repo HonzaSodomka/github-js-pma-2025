@@ -1,10 +1,10 @@
-package com.example.fitnesstracker
+package com.example.fitnesstracker.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.fitnesstracker.R
 import com.example.fitnesstracker.databinding.ActivityMainBinding
 import com.example.fitnesstracker.fragments.*
 import com.google.firebase.auth.FirebaseAuth
