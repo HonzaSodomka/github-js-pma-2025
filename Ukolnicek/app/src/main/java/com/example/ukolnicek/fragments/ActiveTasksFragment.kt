@@ -18,6 +18,8 @@ import com.example.ukolnicek.models.Task
 import com.example.ukolnicek.utils.PreferencesManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -26,6 +28,7 @@ class ActiveTasksFragment : Fragment() {
     private lateinit var binding: FragmentActiveTasksBinding
     private lateinit var adapter: TaskAdapter
     private lateinit var prefs: PreferencesManager
+    private var loadJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +46,15 @@ class ActiveTasksFragment : Fragment() {
         binding.fabAdd.setOnClickListener {
             startActivity(Intent(requireContext(), TaskDetailActivity::class.java))
         }
+    }
+    
+    // Načítáme úkoly při každém zobrazení (i návratu ze Settings)
+    override fun onResume() {
+        super.onResume()
+        loadTasks()
+    }
 
+    fun refreshTasks() {
         loadTasks()
     }
 
@@ -75,9 +86,11 @@ class ActiveTasksFragment : Fragment() {
     }
 
     private fun loadTasks() {
-        lifecycleScope.launch {
+        // Zrušíme předchozí job, abychom neměli duplicitní collectory
+        loadJob?.cancel()
+        loadJob = lifecycleScope.launch {
             val db = AppDatabase.getDatabase(requireContext())
-            db.taskDao().getActiveTasks().collect { tasks ->
+            db.taskDao().getActiveTasks().collectLatest { tasks ->
                 val sortedTasks = if (prefs.getSortOrder()) {
                     tasks.sortedBy { it.deadlineTimestamp }
                 } else {
