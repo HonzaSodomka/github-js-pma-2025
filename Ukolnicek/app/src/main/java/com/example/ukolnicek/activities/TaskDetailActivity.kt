@@ -4,8 +4,11 @@ import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.ukolnicek.databinding.ActivityTaskDetailBinding
 import com.example.ukolnicek.database.AppDatabase
@@ -27,8 +30,16 @@ class TaskDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityTaskDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        
+        // Ošetření výřezu
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         // Načtení dat pokud editujeme
         currentTask = intent.getParcelableExtra("task")
@@ -70,7 +81,9 @@ class TaskDetailActivity : AppCompatActivity() {
                 .show()
         }
         
-        binding.btnBack.setOnClickListener { finish() }
+        binding.btnBack.setOnClickListener { 
+            finish() 
+        }
     }
 
     private fun showDatePicker() {
