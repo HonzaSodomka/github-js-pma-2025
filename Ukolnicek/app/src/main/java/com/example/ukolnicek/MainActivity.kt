@@ -2,7 +2,10 @@ package com.example.ukolnicek
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.example.ukolnicek.activities.LoginActivity
 import com.example.ukolnicek.databinding.ActivityMainBinding
@@ -24,8 +27,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Edge-to-edge (musí být před setContentView)
+        enableEdgeToEdge()
+        
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Ošetření výřezu (padding)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0) // Bottom řeší navigace
+            insets
+        }
 
         auth = FirebaseAuth.getInstance()
         if (auth.currentUser == null) {
@@ -62,5 +76,10 @@ class MainActivity : AppCompatActivity() {
             .commit()
 
         activeFragment = targetFragment
+        
+        // Pokud přepínáme zpět na aktivní úkoly, chceme je refreshnout (kvůli změně řazení)
+        if (targetFragment is ActiveTasksFragment) {
+            targetFragment.refreshTasks()
+        }
     }
 }
