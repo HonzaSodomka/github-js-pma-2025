@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services")
+    id("kotlin-kapt")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -65,7 +67,7 @@ dependencies {
     // Tady pozor: Pokud používáš KSP (novější) nebo KAPT (starší).
     // Pro jednoduchost teď zkusíme 'kapt', ale musíš přidat plugin nahoře.
     // NEBO jednodušeji (pokud nemáš nastavené KSP/KAPT v toml):
-    annotationProcessor("androidx.room:room-compiler:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
     // (V moderním Kotlinu by se mělo používat 'ksp', ale to vyžaduje změnu v Project level gradle.
     // Zkusíme jestli ti projde 'kapt' plugin, viz níže).
 
