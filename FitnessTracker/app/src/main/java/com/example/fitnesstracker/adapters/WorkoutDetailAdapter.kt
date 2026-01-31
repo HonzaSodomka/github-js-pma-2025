@@ -6,6 +6,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -16,18 +17,22 @@ import com.example.fitnesstracker.utils.ExerciseData
 
 /**
  * Adapter pro zobrazení cviků v detailu tréninku
- * - Podporuje "Edit Mode" s vizuální indikací (tužka)
+ * - Podporuje "Edit Mode":
+ *   - Editace sérií (klik na řádek)
+ *   - Mazání celých cviků (tlačítko koše)
  */
 class WorkoutDetailAdapter(
     private val exercises: List<WorkoutExercise>,
-    private val onSetClick: (exercisePosition: Int, setPosition: Int, set: WorkoutSet) -> Unit
+    private val onSetClick: (exercisePosition: Int, setPosition: Int, set: WorkoutSet) -> Unit,
+    private val onDeleteExercise: (exercisePosition: Int) -> Unit // Nový callback pro smazání
 ) : RecyclerView.Adapter<WorkoutDetailAdapter.ExerciseViewHolder>() {
 
-    private var isEditMode = false // Interní stav
+    private var isEditMode = false
 
     class ExerciseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvExerciseName: TextView = view.findViewById(R.id.tvExerciseName)
         val setsContainer: LinearLayout = view.findViewById(R.id.setsContainer)
+        val btnDelete: ImageButton = view.findViewById(R.id.btnDeleteExercise) // Tlačítko smazat
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExerciseViewHolder {
@@ -38,10 +43,9 @@ class WorkoutDetailAdapter(
 
     override fun getItemCount() = exercises.size
 
-    // Funkce pro přepínání módu z aktivity
     fun setEditMode(enabled: Boolean) {
         isEditMode = enabled
-        notifyDataSetChanged() // Překreslit celý seznam
+        notifyDataSetChanged()
     }
 
     override fun onBindViewHolder(holder: ExerciseViewHolder, position: Int) {
@@ -49,6 +53,13 @@ class WorkoutDetailAdapter(
         val isCardio = isCardioExercise(exercise.name)
 
         holder.tvExerciseName.text = exercise.name
+        
+        // Zobrazit/Skrýt tlačítko smazání podle edit módu
+        holder.btnDelete.visibility = if (isEditMode) View.VISIBLE else View.GONE
+        holder.btnDelete.setOnClickListener {
+            onDeleteExercise(position)
+        }
+
         holder.setsContainer.removeAllViews()
 
         for ((setIndex, set) in exercise.sets.withIndex()) {
@@ -57,9 +68,8 @@ class WorkoutDetailAdapter(
                 gravity = Gravity.CENTER_VERTICAL
                 setPadding(0, 16, 0, 16)
                 
-                // V edit módu přidáme vizuální feedback
                 if (isEditMode) {
-                    setBackgroundColor(Color.parseColor("#F3F4F6")) // Lehká šedá
+                    setBackgroundColor(Color.parseColor("#F3F4F6"))
                 } else {
                     setBackgroundColor(Color.TRANSPARENT)
                 }
@@ -69,7 +79,6 @@ class WorkoutDetailAdapter(
                 }
             }
 
-            // Číslo série
             val tvNum = TextView(holder.itemView.context).apply {
                 text = "${setIndex + 1}"
                 setTextColor(Color.parseColor("#9CA3AF"))
@@ -80,7 +89,6 @@ class WorkoutDetailAdapter(
             }
             rowLayout.addView(tvNum)
 
-            // Hodnoty
             val tvValues = TextView(holder.itemView.context).apply {
                 text = if (isCardio) {
                     "${set.weight.toInt()} min"
@@ -91,16 +99,13 @@ class WorkoutDetailAdapter(
                 textSize = 18f
                 typeface = Typeface.DEFAULT_BOLD
                 setPadding(32, 0, 0, 0)
-                
-                // Aby text zabral zbylé místo
                 layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
             }
             rowLayout.addView(tvValues)
 
-            // === IKONA TUŽKY (JEN V EDIT MÓDU) ===
             if (isEditMode) {
                 val tvEditIcon = TextView(holder.itemView.context).apply {
-                    text = "✏️" // Emoji tužky
+                    text = "✏️"
                     textSize = 16f
                     setPadding(16, 0, 32, 0)
                     gravity = Gravity.CENTER
