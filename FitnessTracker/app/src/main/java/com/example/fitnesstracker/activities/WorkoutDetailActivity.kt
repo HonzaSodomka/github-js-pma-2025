@@ -1,8 +1,12 @@
 package com.example.fitnesstracker.activities
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.InputType
+import android.view.Gravity
+import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -27,18 +31,17 @@ import java.util.Locale
 
 /**
  * Aktivita zobrazující detail dokončeného tréninku
- * - Název, datum, délka tréninku
- * - Seznam cviků s jejich sériemi (RecyclerView)
- * - Možnost editace sérií (kliknutím) a následné uložení
- * - Možnost sdílení tréninku jako text (pokud nejsou neuložené změny)
- * - Edge-to-edge design
+ * - Obsahuje tlačítko UPRAVIT CVIKY, které aktivuje editační mód
  */
 class WorkoutDetailActivity : AppCompatActivity() {
 
     private lateinit var workout: Workout
     private lateinit var adapter: WorkoutDetailAdapter
     private lateinit var btnShare: ImageButton
-    private var isModified = false // Sledujeme, jestli došlo ke změně
+    private lateinit var btnEditMode: Button // Naše nové textové tlačítko
+    
+    private var isModified = false 
+    private var isEditMode = false // Sleduje, jestli jsme v režimu úprav
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +67,23 @@ class WorkoutDetailActivity : AppCompatActivity() {
         val btnBack = findViewById<ImageButton>(R.id.btnBack)
         btnShare = findViewById<ImageButton>(R.id.btnShare)
 
+        // === 1. PŘIDÁNÍ TEXTOVÉHO TLAČÍTKA "UPRAVIT" DO HLAVIČKY ===
+        // Vytvoříme tlačítko programově a vložíme ho do AppBarLayoutu
+        btnEditMode = Button(this).apply {
+            text = "UPRAVIT CVIKY"
+            textSize = 14f
+            setTextColor(Color.WHITE)
+            setBackgroundColor(Color.parseColor("#4F46E5")) // Indigo barva
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(40, 0, 40, 20)
+            }
+        }
+        // Vložíme ho na konec AppBarLayoutu (pod statistiky)
+        appBar.addView(btnEditMode)
+
         // Vyplnění dat
         tvDetailName.text = workout.name
         val sdf = SimpleDateFormat("dd. MMM yyyy", Locale.getDefault())
@@ -71,34 +91,52 @@ class WorkoutDetailActivity : AppCompatActivity() {
         val minutes = workout.durationSeconds / 60
         tvDetailDuration.text = "$minutes MIN"
 
-        // === SETUP ADAPTERU S CLICK LISTENEREM ===
+        // === SETUP ADAPTERU ===
         rvExercises.layoutManager = LinearLayoutManager(this)
         adapter = WorkoutDetailAdapter(workout.exercises) { exPos, setPos, set ->
-            showEditSetDialog(exPos, setPos, set)
+            // Callback po kliknutí na sérii (funguje jen v edit módu)
+            if (isEditMode) {
+                showEditSetDialog(exPos, setPos, set)
+            } else {
+                Toast.makeText(this, "Klikni na 'UPRAVIT CVIKY' pro změnu", Toast.LENGTH_SHORT).show()
+            }
         }
         rvExercises.adapter = adapter
 
+        // === LISTENERS ===
         btnBack.setOnClickListener { finish() }
         
-        // Tlačítko Share funguje primárně jako Sdílet, 
-        // ale pokud uděláme změnu, změní se na Uložit
         btnShare.setOnClickListener { 
-            if (isModified) {
-                saveChangesToFirestore()
-            } else {
-                shareWorkout() 
-            }
+            if (isModified) saveChangesToFirestore() else shareWorkout() 
+        }
+
+        // Logika přepínání Edit módu
+        btnEditMode.setOnClickListener {
+            toggleEditMode()
         }
     }
 
-    /**
-     * Zobrazí dialog pro editaci váhy a opakování
-     */
+    private fun toggleEditMode() {
+        isEditMode = !isEditMode
+        
+        if (isEditMode) {
+            btnEditMode.text = "UKONČIT ÚPRAVY"
+            btnEditMode.setBackgroundColor(Color.parseColor("#EF4444")) // Červená pro ukončení
+            Toast.makeText(this, "Nyní můžeš kliknout na série a upravit je", Toast.LENGTH_LONG).show()
+        } else {
+            btnEditMode.text = "UPRAVIT CVIKY"
+            btnEditMode.setBackgroundColor(Color.parseColor("#4F46E5")) // Zpět na modrou
+        }
+
+        // Řekneme adaptéru, že se změnil mód (překreslí ikonky tužky)
+        adapter.setEditMode(isEditMode)
+    }
+
     private fun showEditSetDialog(exPos: Int, setPos: Int, set: WorkoutSet) {
         val context = this
         val layout = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(50, 40, 50, 10)
+            setPadding(60, 40, 60, 10)
         }
 
         val inputWeight = EditText(context).apply {
@@ -117,9 +155,9 @@ class WorkoutDetailActivity : AppCompatActivity() {
         layout.addView(inputReps)
 
         AlertDialog.Builder(context)
-            .setTitle("Upravit sérii")
+            .setTitle("Upravit sérii ${setPos + 1}")
             .setView(layout)
-            .setPositiveButton("OK") { _, _ ->
+            .setPositiveButton("Uložit") { _, _ ->
                 val newWeight = inputWeight.text.toString().toDoubleOrNull() ?: set.weight
                 val newReps = inputReps.text.toString().toIntOrNull() ?: set.reps
 
@@ -127,94 +165,61 @@ class WorkoutDetailActivity : AppCompatActivity() {
                 workout.exercises[exPos].sets[setPos].weight = newWeight
                 workout.exercises[exPos].sets[setPos].reps = newReps
                 
-                // Refresh listu
                 adapter.notifyItemChanged(exPos)
-                
-                // Přepnutí do módu "Ukládání"
                 enableSaveMode()
             }
             .setNegativeButton("Zrušit", null)
             .show()
     }
 
-    /**
-     * Změní ikonku Sdílet na Uložit (disketa/fajfka)
-     */
     private fun enableSaveMode() {
         if (!isModified) {
             isModified = true
-            // Změníme ikonku na "Save"
-            btnShare.setImageResource(android.R.drawable.ic_menu_save)
-            Toast.makeText(this, "Nezapomeň změny uložit!", Toast.LENGTH_SHORT).show()
+            btnShare.setImageResource(android.R.drawable.ic_menu_save) // Ikonka diskety
+            Toast.makeText(this, "Změny provedeny. Klikni vpravo nahoře pro ULOŽENÍ!", Toast.LENGTH_LONG).show()
         }
     }
 
-    /**
-     * Uloží aktualizovaný workout do Firestore
-     */
     private fun saveChangesToFirestore() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         
-        if (workout.id.isEmpty()) {
-            Toast.makeText(this, "Chyba: Chybí ID tréninku", Toast.LENGTH_SHORT).show()
-            return
-        }
+        if (workout.id.isEmpty()) return
 
-        btnShare.isEnabled = false // Zabránit double-clicku
+        btnShare.isEnabled = false
+        btnEditMode.isEnabled = false // Zablokovat i edit button
 
         FirebaseFirestore.getInstance().collection("users").document(userId)
             .collection("workouts").document(workout.id)
-            .set(workout) // .set() přepíše dokument novými daty
+            .set(workout)
             .addOnSuccessListener {
-                Toast.makeText(this, "Trénink aktualizován!", Toast.LENGTH_SHORT).show()
-                finish() // Zavřeme aktivitu a vrátíme se do historie
+                Toast.makeText(this, "Uloženo!", Toast.LENGTH_SHORT).show()
+                finish()
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "Chyba ukládání: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Chyba: ${e.message}", Toast.LENGTH_LONG).show()
                 btnShare.isEnabled = true
+                btnEditMode.isEnabled = true
             }
     }
 
-    /**
-     * Sdílí trénink jako text přes systémový share dialog
-     * Vytvoří formátovaný text s názvem, datem a všemi cviky
-     */
     private fun shareWorkout() {
-        // === SESTAVENÍ TEXTU ===
         val sdf = SimpleDateFormat("dd. MMM yyyy", Locale.getDefault())
         val dateStr = sdf.format(workout.date)
-        val minutes = workout.durationSeconds / 60
-
+        
         val builder = StringBuilder()
-        builder.append("💪 ${workout.name}\n")
-        builder.append("📅 $dateStr\n")
-        builder.append("⏱️ $minutes min\n")
-        builder.append("\n")
+        builder.append("💪 ${workout.name}\n📅 $dateStr\n\n")
 
-        // Přidání cviků a sérií
-        workout.exercises.forEachIndexed { exerciseIndex, exercise ->
-            builder.append("${exerciseIndex + 1}. ${exercise.name}\n")
-
-            exercise.sets.forEachIndexed { setIndex, set ->
-                builder.append("   ${setIndex + 1}×  ${set.weight} kg × ${set.reps} opakování\n")
-            }
-
+        workout.exercises.forEachIndexed { i, ex ->
+            builder.append("${i + 1}. ${ex.name}\n")
+            ex.sets.forEach { s -> builder.append("   ${s.weight}kg × ${s.reps}\n") }
             builder.append("\n")
         }
 
-        // Přidání statistik na konec
-        val totalSets = workout.exercises.sumOf { it.sets.size }
-        builder.append("📊 Celkem: ${workout.exercises.size} cviků, $totalSets sérií")
-
-        // === SHARE INTENT ===
         val shareIntent = Intent().apply {
             action = Intent.ACTION_SEND
             type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, "Můj trénink: ${workout.name}")
             putExtra(Intent.EXTRA_TEXT, builder.toString())
         }
-
-        // Zobrazení share dialogu
-        startActivity(Intent.createChooser(shareIntent, "Sdílet trénink přes..."))
+        startActivity(Intent.createChooser(shareIntent, "Sdílet"))
     }
 }
