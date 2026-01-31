@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Layout pro jeden cvik v detailu tréninku (READ-ONLY)
-    - CardView s názvem cviku
-    - Modré dělítko
-    - Seznam sérií (bez možnosti editace)
-    - Používá RecyclerView místo programmatic UI
+    Layout pro jeden cvik v detailu tréninku (Upraveno pro EDIT MODE)
+    - Přidáno tlačítko pro smazání cviku (viditelné jen v edit módu)
 -->
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -22,16 +19,34 @@
         android:orientation="vertical"
         android:padding="32dp">
 
-        <!-- NÁZEV CVIKU -->
-        <TextView
-            android:id="@+id/tvExerciseName"
-            android:layout_width="wrap_content"
+        <!-- HEADER: Název + Delete Button -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bench Press"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="#111827"
-            android:paddingBottom="16dp"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvExerciseName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Bench Press"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#111827"/>
+
+            <!-- TLAČÍTKO SMAZAT (Viditelné jen v edit módu) -->
+            <ImageButton
+                android:id="@+id/btnDeleteExercise"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@android:drawable/ic_menu_delete"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="#EF4444"
+                android:visibility="gone"
+                android:contentDescription="Smazat cvik"/>
+        </LinearLayout>
 
         <!-- DĚLÍTKO (modrá čárka pod názvem) -->
         <View
@@ -39,9 +54,10 @@
             android:layout_width="80dp"
             android:layout_height="6dp"
             android:background="#4F46E5"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="24dp"/>
 
-        <!-- KONTEJNER PRO SÉRIE (naplňuje se programaticky v adapteru) -->
+        <!-- KONTEJNER PRO SÉRIE -->
         <LinearLayout
             android:id="@+id/setsContainer"
             android:layout_width="match_parent"
