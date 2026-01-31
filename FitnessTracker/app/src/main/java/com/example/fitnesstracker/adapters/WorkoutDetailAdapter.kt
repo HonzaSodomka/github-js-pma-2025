@@ -15,13 +15,15 @@ import com.example.fitnesstracker.models.WorkoutSet
 import com.example.fitnesstracker.utils.ExerciseData
 
 /**
- * Adapter pro zobrazení cviků v detailu tréninku (READ-ONLY)
- * - Detekuje kardio cviky a zobrazuje jen čas místo váhy+reps
+ * Adapter pro zobrazení cviků v detailu tréninku
+ * - Podporuje "Edit Mode" s vizuální indikací (tužka)
  */
 class WorkoutDetailAdapter(
     private val exercises: List<WorkoutExercise>,
-    private val onSetClick: (exercisePosition: Int, setPosition: Int, set: WorkoutSet) -> Unit // Nový callback
+    private val onSetClick: (exercisePosition: Int, setPosition: Int, set: WorkoutSet) -> Unit
 ) : RecyclerView.Adapter<WorkoutDetailAdapter.ExerciseViewHolder>() {
+
+    private var isEditMode = false // Interní stav
 
     class ExerciseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvExerciseName: TextView = view.findViewById(R.id.tvExerciseName)
@@ -36,6 +38,12 @@ class WorkoutDetailAdapter(
 
     override fun getItemCount() = exercises.size
 
+    // Funkce pro přepínání módu z aktivity
+    fun setEditMode(enabled: Boolean) {
+        isEditMode = enabled
+        notifyDataSetChanged() // Překreslit celý seznam
+    }
+
     override fun onBindViewHolder(holder: ExerciseViewHolder, position: Int) {
         val exercise = exercises[position]
         val isCardio = isCardioExercise(exercise.name)
@@ -43,18 +51,19 @@ class WorkoutDetailAdapter(
         holder.tvExerciseName.text = exercise.name
         holder.setsContainer.removeAllViews()
 
-        // Vykreslit série
         for ((setIndex, set) in exercise.sets.withIndex()) {
             val rowLayout = LinearLayout(holder.itemView.context).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER_VERTICAL
                 setPadding(0, 16, 0, 16)
-                isClickable = true
-                isFocusable = true
-                // Efekt kliknutí (ripple)
-                setBackgroundResource(android.R.attr.selectableItemBackground)
+                
+                // V edit módu přidáme vizuální feedback
+                if (isEditMode) {
+                    setBackgroundColor(Color.parseColor("#F3F4F6")) // Lehká šedá
+                } else {
+                    setBackgroundColor(Color.TRANSPARENT)
+                }
 
-                // === KLIK LISTENER PRO EDITACI ===
                 setOnClickListener {
                     onSetClick(position, setIndex, set)
                 }
@@ -71,30 +80,38 @@ class WorkoutDetailAdapter(
             }
             rowLayout.addView(tvNum)
 
-            // Hodnoty (rozdílné pro kardio vs normální)
+            // Hodnoty
             val tvValues = TextView(holder.itemView.context).apply {
                 text = if (isCardio) {
-                    // Pro kardio: jen čas v minutách
                     "${set.weight.toInt()} min"
                 } else {
-                    // Pro normální: váha × opakování
                     "${set.weight} kg   ×   ${set.reps}"
                 }
                 setTextColor(Color.parseColor("#374151"))
                 textSize = 18f
                 typeface = Typeface.DEFAULT_BOLD
                 setPadding(32, 0, 0, 0)
+                
+                // Aby text zabral zbylé místo
+                layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
             }
             rowLayout.addView(tvValues)
+
+            // === IKONA TUŽKY (JEN V EDIT MÓDU) ===
+            if (isEditMode) {
+                val tvEditIcon = TextView(holder.itemView.context).apply {
+                    text = "✏️" // Emoji tužky
+                    textSize = 16f
+                    setPadding(16, 0, 32, 0)
+                    gravity = Gravity.CENTER
+                }
+                rowLayout.addView(tvEditIcon)
+            }
 
             holder.setsContainer.addView(rowLayout)
         }
     }
 
-    /**
-     * Detekce zda je cvik kardio
-     * - Zkontroluje kategorii z ExerciseData
-     */
     private fun isCardioExercise(exerciseName: String): Boolean {
         val category = ExerciseData.getCategoryForExercise(exerciseName, emptyList())
         return category == "Kardio"
