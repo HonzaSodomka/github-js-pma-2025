@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fitnesstracker.R
 import com.example.fitnesstracker.models.WorkoutExercise
+import com.example.fitnesstracker.models.WorkoutSet
 import com.example.fitnesstracker.utils.ExerciseData
 
 /**
@@ -18,7 +19,8 @@ import com.example.fitnesstracker.utils.ExerciseData
  * - Detekuje kardio cviky a zobrazuje jen čas místo váhy+reps
  */
 class WorkoutDetailAdapter(
-    private val exercises: List<WorkoutExercise>
+    private val exercises: List<WorkoutExercise>,
+    private val onSetClick: (exercisePosition: Int, setPosition: Int, set: WorkoutSet) -> Unit // Nový callback
 ) : RecyclerView.Adapter<WorkoutDetailAdapter.ExerciseViewHolder>() {
 
     class ExerciseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -42,16 +44,25 @@ class WorkoutDetailAdapter(
         holder.setsContainer.removeAllViews()
 
         // Vykreslit série
-        for ((index, set) in exercise.sets.withIndex()) {
+        for ((setIndex, set) in exercise.sets.withIndex()) {
             val rowLayout = LinearLayout(holder.itemView.context).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER_VERTICAL
-                setPadding(0, 12, 0, 12)
+                setPadding(0, 16, 0, 16)
+                isClickable = true
+                isFocusable = true
+                // Efekt kliknutí (ripple)
+                setBackgroundResource(android.R.attr.selectableItemBackground)
+
+                // === KLIK LISTENER PRO EDITACI ===
+                setOnClickListener {
+                    onSetClick(position, setIndex, set)
+                }
             }
 
             // Číslo série
             val tvNum = TextView(holder.itemView.context).apply {
-                text = "${index + 1}"
+                text = "${setIndex + 1}"
                 setTextColor(Color.parseColor("#9CA3AF"))
                 textSize = 14f
                 typeface = Typeface.DEFAULT_BOLD
